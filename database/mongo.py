@@ -6,8 +6,8 @@ class MongoDB():
   def __init__(self):
     self.db_uri = "mongodb://127.0.0.1:27017/"
     self.client = None
-    self.database = None
-    self.collection = None
+    self.__database = None
+    self.__collection = None
     
     return
   
@@ -23,30 +23,41 @@ class MongoDB():
       print("Database connected!")
 
 
-    self.database = self.client.get_database("manga-lib")
-    self.collection = self.database.get_collection("raw_metadata")
+    self.__database = self.client.get_database("manga-lib")
+    self.__collection = self.__database.get_collection("raw_metadata")
 
   # Check if the connection is successful? Re-connect call when need
   def is_connected(self):
-    if self.client is None or self.database is None or self.collection is None:
+    if self.client is None or self.__database is None or self.__collection is None:
       print("Reconnecting to database!")
       self.connect()
       return False
     
     return True
 
-  # SAVE: add or update item from database
+  # SAVE: add or update item from database, using upsert
   def save(self, data:dict):
-    if self.collection is None or not self.is_connected():
+    if self.__collection is None or not self.is_connected():
       return
     
     query_filter = {"id": data["id"]}
     update_operation = {"$set": data}
     
-    res = self.collection.update_one(query_filter, update_operation, upsert = True)
+    # Perform update or add to database using upsert
+    res = self.__collection.update_one(query_filter, update_operation, upsert = True)
     print(res)
     
     return res
+
+  def get_total(self) -> int | bool:
+    if self.__collection is None:
+      self.is_connected()
+      return False
+    
+    res = self.__collection.count_documents({})
+    return res
+
+
 
 
 
