@@ -29,12 +29,12 @@ class Fetcher():
     if self.base_url is None: return
 
     # This lock only let this function run only once
-    if not self.mongo_client.get_total() or self.mongo_client.get_total() > 0:
-      return
+    # if not self.mongo_client.get_total() or self.mongo_client.get_total() > 0:
+    #   return
     
 
+
     while(True):
-      
       try:
         res = requests.get(f"{self.base_url}/manga", {
           "limit": self.__LIMIT,
@@ -43,7 +43,7 @@ class Fetcher():
           "includes[]": self.__expansion_opts,
           "availableTranslatedLanguage[]": ["en", "vi"], 
           "hasAvailableChapters": "1", # True
-        })
+        }, timeout=10)
 
         # Handle bad response
         if not res.ok:
@@ -51,17 +51,19 @@ class Fetcher():
           break
         
         # Exhaust the loop while reach the end of the list
-        if self.offset > self.MAX_ITEM:
+        if self.__offset > self.MAX_ITEM:
           break
 
-        self.offset += self.__LIMIT # Move cursor to next page
+
+        self.__offset += self.__LIMIT # Move cursor to next page
 
         # Extract raw data list from the response
         raw_data = res.json().get("data")
 
-
         # SAVE manga to database
         for manga in raw_data:
+          latestChapterId = manga["attributes"]["latestUploadedChapter"]
+          manga["attributes"]["latestUploadedChapter"] = self.getLatestUploadedChapter(latestChapterId)
           self.mongo_client.save(manga)
 
       except Exception as e:
@@ -70,9 +72,25 @@ class Fetcher():
     
     return
 
+  # Return an exact date of the latest uploaded chapter
+  def getLatestUploadedChapter(self, id:str):
+    if not id: return
+
+    try:
+      res = requests.get(f"https://api.mangadex.org/chapter/{id}", timeout=10)
+
+      if not res.ok:
+        raise Exception({"status":"500", "msg": res})
+
+      data = res.json().get("data").get("attributes").get("updatedAt")
+      return data
+    
+    except Exception as e:
+      print(e)
+      return None
+
 
 if __name__ == "__main__":
   fetcher = Fetcher()
-
 
   fetcher.fetch_all()

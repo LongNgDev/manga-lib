@@ -1,5 +1,7 @@
 
 from pymongo import MongoClient
+# from pymongo.errors
+
 
 class MongoDB():
 
@@ -49,6 +51,9 @@ class MongoDB():
     
     return res
 
+  # RETRIEVE: return 
+
+  # RETRIEVE: return the total item in collections
   def get_total(self) -> int | bool:
     if self.__collection is None:
       self.is_connected()
