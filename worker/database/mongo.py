@@ -1,5 +1,5 @@
 
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 # from pymongo.errors
 
 
@@ -62,6 +62,24 @@ class MongoDB():
     res = self.__collection.count_documents({})
     return res
 
+  def get_latest(self, limit):
+    if self.__collection is None:
+      self.is_connected()
+      return False
+    
+    res = self.__collection.find().sort("latestUploadedChapter", DESCENDING).limit(limit).to_list()
+
+    if len(res) == 0:
+      return
+    
+    return res
+  
+  def get_all(self):
+    if self.__collection is None:
+      self.is_connected()
+      return False
+
+    return self.__collection.find().to_list()
 
 
 

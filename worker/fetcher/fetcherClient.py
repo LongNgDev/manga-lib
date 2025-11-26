@@ -25,14 +25,12 @@ class Fetcher():
 
 
 
-  def fetch_all(self):
+  def fetchAll(self):
     if self.base_url is None: return
 
     # This lock only let this function run only once
-    # if not self.mongo_client.get_total() or self.mongo_client.get_total() > 0:
-    #   return
-    
-
+    if self.mongo_client.get_total() > 0:
+      return
 
     while(True):
       try:
@@ -41,8 +39,9 @@ class Fetcher():
           "offset": self.__offset,
           "excludedTags[]": self.__exclude_tags,
           "includes[]": self.__expansion_opts,
-          "availableTranslatedLanguage[]": ["en", "vi"], 
-          "hasAvailableChapters": "1", # True
+          "availableTranslatedLanguage[]": ["en", "vi"],
+          "order[latestUploadedChapter]":"desc",
+          # "hasAvailableChapters": "1", # True
         }, timeout=10)
 
         # Handle bad response
@@ -52,10 +51,11 @@ class Fetcher():
         
         # Exhaust the loop while reach the end of the list
         if self.__offset > self.MAX_ITEM:
+          print("Limit reached!")
           break
 
-
-        self.__offset += self.__LIMIT # Move cursor to next page
+        # Move cursor to next page
+        self.__offset += self.__LIMIT 
 
         # Extract raw data list from the response
         raw_data = res.json().get("data")
@@ -63,17 +63,44 @@ class Fetcher():
         # SAVE manga to database
         for manga in raw_data:
           latestChapterId = manga["attributes"]["latestUploadedChapter"]
-          manga["attributes"]["latestUploadedChapter"] = self.getLatestUploadedChapter(latestChapterId)
+          manga["attributes"]["latestUploadedChapter"] = self.fetchLatestUploadedChapter(latestChapterId)
           self.mongo_client.save(manga)
 
       except Exception as e:
         print(f"Errors: {e}")
 
-    
-    return
+  def fetchLatestChapter(self):
+    try:
+      res = requests.get(f"{self.base_url}/manga", {
+          "limit": self.__LIMIT,
+          "offset": self.__offset,
+          "excludedTags[]": self.__exclude_tags,
+          "includes[]": self.__expansion_opts,
+          "availableTranslatedLanguage[]": ["en", "vi"], 
+          "hasAvailableChapters": "1", # True
+        }, timeout=10)
+      
+      if not res.ok:
+          print(f"Fetch raw data failed! Error msg: {res.json().get("errors")[0]}")
+          raise Exception ({"err": res.raise_for_status()})
+      
+      raw_data = res.json().get("data")
+
+      # SAVE manga to database
+      for manga in raw_data:
+        latestChapterId = manga["attributes"]["latestUploadedChapter"]
+        manga["attributes"]["latestUploadedChapter"] = self.fetchLatestUploadedChapter(latestChapterId)
+        print(manga["attributes"]["latestUploadedChapter"])
+        self.mongo_client.save(manga)
+
+    except Exception as err:
+      print(err)
+
+    finally:
+      return
 
   # Return an exact date of the latest uploaded chapter
-  def getLatestUploadedChapter(self, id:str):
+  def fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
@@ -88,9 +115,31 @@ class Fetcher():
     except Exception as e:
       print(e)
       return None
+    
+  def proccessLatestUploadedChapter(self):
+    data = self.mongo_client.get_all()
+    
+    if not data: return
+    
+    for manga in data:
+      latestChapterId = manga["attributes"]["latestUploadedChapter"]
 
+      if latestChapterId is None: continue
+      dateFormat = self.fetchLatestUploadedChapter(latestChapterId)
+
+      if dateFormat is None: continue
+      manga["attributes"]["latestUploadedChapter"] = dateFormat
+      print(latestChapterId, manga)
+      self.mongo_client.save(manga)
+      return
+    
+
+  def getLatestManga(self):
+    data = self.mongo_client.get_latest(limit=2)
+    return data
 
 if __name__ == "__main__":
   fetcher = Fetcher()
 
-  fetcher.fetch_all()
+
+  fetcher.fetchAll()
