@@ -1,4 +1,3 @@
-
 import requests
 from database.mongo import MongoDB
 
@@ -13,18 +12,17 @@ Features:
 
 class Fetcher():
 
-  def __init__(self, url:str = "https://api.mangadex.org"):
+  def __init__(self, url:str = "https://api.mangadex.org", db: MongoDB = MongoDB()):
     self.base_url = url
-    self.__LIMIT = 100 # Set limit of the response data [0,100]
+    self.__limit = 100 # Set limit of the response data [0,100]
     self.__offset = 0 # Set offset from the first item of the list
     self.__exclude_tags = ["5920b825-4181-4a17-beeb-9918b0ff7a30", "65761a2a-415e-47f3-bef2-a9dababba7a6", "2bd2e8d0-f146-434a-9b51-fc9ff2c5fe6a"]
     self.__expansion_opts = ["manga", "cover_art", "author", "artist", "tag", "creator"]
     self.MAX_ITEM = 10000 # Server limit at 10000
-    self.mongo_client = MongoDB()
-    self.mongo_client.connect()
+    self.mongo_client = db
 
 
-
+  
   def fetchAll(self):
     if self.base_url is None: return
 
@@ -35,7 +33,7 @@ class Fetcher():
     while(True):
       try:
         res = requests.get(f"{self.base_url}/manga", {
-          "limit": self.__LIMIT,
+          "limit": self.__limit,
           "offset": self.__offset,
           "excludedTags[]": self.__exclude_tags,
           "includes[]": self.__expansion_opts,
@@ -55,7 +53,7 @@ class Fetcher():
           break
 
         # Move cursor to next page
-        self.__offset += self.__LIMIT 
+        self.__offset += self.__limit 
 
         # Extract raw data list from the response
         raw_data = res.json().get("data")
@@ -63,34 +61,35 @@ class Fetcher():
         # SAVE manga to database
         for manga in raw_data:
           latestChapterId = manga["attributes"]["latestUploadedChapter"]
-          manga["attributes"]["latestUploadedChapter"] = self.fetchLatestUploadedChapter(latestChapterId)
+          manga["attributes"]["latestUploadedChapter"] = self.__fetchLatestUploadedChapter(latestChapterId)
           self.mongo_client.save(manga)
 
       except Exception as e:
         print(f"Errors: {e}")
 
-  def fetchLatestChapter(self):
+  def fetchLatest(self):
     try:
       res = requests.get(f"{self.base_url}/manga", {
-          "limit": self.__LIMIT,
+          "limit": self.__limit,
           "offset": self.__offset,
           "excludedTags[]": self.__exclude_tags,
           "includes[]": self.__expansion_opts,
           "availableTranslatedLanguage[]": ["en", "vi"], 
-          "hasAvailableChapters": "1", # True
+          "order[latestUploadedChapter]":"desc",
+          # "hasAvailableChapters": "1", # True
         }, timeout=10)
       
       if not res.ok:
           print(f"Fetch raw data failed! Error msg: {res.json().get("errors")[0]}")
           raise Exception ({"err": res.raise_for_status()})
       
+      # Extract raw data list from the response
       raw_data = res.json().get("data")
 
       # SAVE manga to database
       for manga in raw_data:
-        latestChapterId = manga["attributes"]["latestUploadedChapter"]
-        manga["attributes"]["latestUploadedChapter"] = self.fetchLatestUploadedChapter(latestChapterId)
-        print(manga["attributes"]["latestUploadedChapter"])
+        latestChapterId = manga["attributes"]["latestUploadedChapter"] # Extract latest chapter ID
+        manga["attributes"]["latestUploadedChapter"] = self.__fetchLatestUploadedChapter(latestChapterId) # Assign date to this key
         self.mongo_client.save(manga)
 
     except Exception as err:
@@ -100,7 +99,7 @@ class Fetcher():
       return
 
   # Return an exact date of the latest uploaded chapter
-  def fetchLatestUploadedChapter(self, id:str):
+  def __fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
@@ -125,7 +124,7 @@ class Fetcher():
       latestChapterId = manga["attributes"]["latestUploadedChapter"]
 
       if latestChapterId is None: continue
-      dateFormat = self.fetchLatestUploadedChapter(latestChapterId)
+      dateFormat = self.__fetchLatestUploadedChapter(latestChapterId)
 
       if dateFormat is None: continue
       manga["attributes"]["latestUploadedChapter"] = dateFormat
@@ -142,4 +141,5 @@ if __name__ == "__main__":
   fetcher = Fetcher()
 
 
-  fetcher.fetchAll()
+  # fetcher.fetchAll()
+  fetcher.fetchLatest()

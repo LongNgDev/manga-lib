@@ -1,36 +1,55 @@
 
 from pymongo import MongoClient, DESCENDING
+from pymongo.errors import ConnectionFailure
 # from pymongo.errors
 
 
 class MongoDB():
 
   def __init__(self):
-    self.db_uri = "mongodb://127.0.0.1:27017/"
+    self.db_uri = "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
     self.client = None
     self.__database = None
     self.__collection = None
     
-    return
-  
   # Connect to MongoDB
   def connect(self):
     if self.db_uri is None:
       print("Cannot connect without database URI!")
       return
+  
+    if self.client is not None or self.__database is not None or self.__collection is not None:
+      return
+
+    try:
+      # Connect to client and test connection using ping
+      print("Establishing connection... ", end="")
+      self.client = MongoClient(self.db_uri)
+      print("Done")
+      
+      print("Connecting to database... ", end="")
+      self.__database = self.client.get_database("manga-lib")
+      print("Done")
+      
+
+      print("Connecting to collection... ", end="")
+      self.__collection = self.__database.get_collection("raw_metadata")
+      print("Done")
+
+      if self.client.admin.command("ping"):
+        print("Database connected!", end="\n\n")
     
-    # Connect to client and test connection using ping
-    self.client = MongoClient(self.db_uri)
-    if self.client.admin.command("ping"):
-      print("Database connected!")
+    except ConnectionFailure as e:
+      print(f"Connected failed! Error: {e}")
 
-
-    self.__database = self.client.get_database("manga-lib")
-    self.__collection = self.__database.get_collection("raw_metadata")
 
   # Check if the connection is successful? Re-connect call when need
   def is_connected(self):
-    if self.client is None or self.__database is None or self.__collection is None:
+    if self.client is None:
+      self.connect()
+      return False
+    
+    if  self.__database is None or self.__collection is None:
       print("Reconnecting to database!")
       self.connect()
       return False
@@ -39,7 +58,9 @@ class MongoDB():
 
   # SAVE: add or update item from database, using upsert
   def save(self, data:dict):
-    if self.__collection is None or not self.is_connected():
+    if self.__collection is None:
+      print("Collection not found!")
+      self.connect()
       return
     
     query_filter = {"id": data["id"]}
@@ -62,6 +83,8 @@ class MongoDB():
     res = self.__collection.count_documents({})
     return res
 
+  
+  # RETRIEVE: return the latest uploaded manga with limit amount
   def get_latest(self, limit):
     if self.__collection is None:
       self.is_connected()
@@ -74,6 +97,7 @@ class MongoDB():
     
     return res
   
+  # RETRIEVE: return all the manga from the database
   def get_all(self):
     if self.__collection is None:
       self.is_connected()

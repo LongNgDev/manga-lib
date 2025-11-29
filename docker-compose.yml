@@ -1,18 +1,17 @@
-name: infra-manga
+name: infra-manga-library
 networks:
-  app_net:
-    external: true
+  mangaLib_net:
 
 services:
   mongo:
     image: mongo:7
-    command: ["bind_ip_all", "--auth"]
+    command: ["--bind_ip_all", "--auth"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
       MONGO_INITDB_DATABASE: manga-lib
     volumes: ["./mongo/data:/data/db"]
-    networks: [app_net]
+    networks: [mangaLib_net]
     ports: ["27017:27017"] # DEV ONLY
     restart: unless-stopped
     healthcheck:
@@ -37,9 +36,9 @@ services:
     volumes:
       - ./worker:/app
     environment:
-      MONGO_URI: "mongodb://admin:admin@mongo:27017/manga-web?authSource=admin"
+      MONGO_URI: "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
     depends_on:
       mongo:
         condition: service_healthy
-    networks: [app_net]
+    networks: [mangaLib_net]
     restart: unless-stopped
