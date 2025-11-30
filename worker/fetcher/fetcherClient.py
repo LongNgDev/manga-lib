@@ -100,13 +100,11 @@ class Fetcher():
       return
 
   # Return an exact date of the latest uploaded chapter
-  async def __fetchLatestUploadedChapter(self, id:str):
+  def __fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
       res = requests.get(f"https://api.mangadex.org/chapter/{id}", timeout=10)
-      
-      await asyncio.sleep(1)
 
       if not res.ok:
         raise Exception({"status":"500", "msg": res})

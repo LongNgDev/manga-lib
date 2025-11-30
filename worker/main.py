@@ -12,7 +12,6 @@ def init():
 def main():
   db, fetcher = init()
 
-
   try:
 
     # Main loop
@@ -31,6 +30,7 @@ def main():
     
   except KeyboardInterrupt:
     print("\nKeyboardInterrupt caught! Exiting gracefully.")
+    return
   
   except Exception as e:
     print(f"Error! {e}")

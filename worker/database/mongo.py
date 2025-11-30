@@ -1,13 +1,16 @@
 
 from pymongo import MongoClient, DESCENDING
 from pymongo.errors import ConnectionFailure
+import dotenv
 # from pymongo.errors
 
+envPath = dotenv.find_dotenv()
+dbURI = dotenv.dotenv_values(envPath).get("MONGO_URI")
 
 class MongoDB():
 
   def __init__(self):
-    self.db_uri = "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
+    self.db_uri = dbURI or "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin" 
     self.client = None
     self.__database = None
     self.__collection = None
@@ -113,3 +116,4 @@ if __name__ == "__main__":
   client = MongoDB()
 
   client.connect()
+  print(dbURI)

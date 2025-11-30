@@ -34,11 +34,28 @@ services:
     build: ./worker
     command: ["python", "main.py"]
     volumes:
-      - ./worker:/app
+      - ./worker:/app/worker
     environment:
       MONGO_URI: "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
     depends_on:
       mongo:
         condition: service_healthy
     networks: [mangaLib_net]
+    restart: unless-stopped
+
+  server:
+    build: ./server
+    command: ["npm", "run", "dev"]
+    # volumes:
+    #   - ./server:/app/server
+    environment:
+      MONGO_URI: "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
+      PORT: 4000
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - mangaLib_net
+    ports:
+      - 4000:4000
     restart: unless-stopped
