@@ -1,0 +1,29 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx src/server.ts",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "module",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"morgan": "^1.10.1",
+		"routes": "^2.1.0"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.19",
+		"@types/express": "^5.0.5",
+		"@types/morgan": "^1.9.10",
+		"@types/node": "^24.10.1",
+		"dotenv": "^17.2.3",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.9.3"
+	}
+}
