@@ -1,0 +1,39 @@
+# Python venvs
+venv/
+.venv/
+*/venv/
+*/.venv/
+
+# Python cache
+__pycache__/
+*/__pycache__/
+*.pyc
+*.pyo
+
+# Node stuff (if any)
+node_modules/
+*/node_modules/
+
+# Environment files
+.env
+*.env
+
+# Git
+.git/
+.gitignore
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Docker itself
+docker-compose.yml
+Dockerfile
+dockerfile
+
+# Logs
+*.log
+
+# Local DB folders
+mongo/data/
+*/mongo/data/

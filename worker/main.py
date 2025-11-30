@@ -22,12 +22,12 @@ def main():
       if db.get_total() <= 0:
         print(f"Initialising database by fetching all the data from source.")
         fetcher.fetchAll()
-        print("Fetch All Done!")
+        print("Fetch All Done!", end="\n\n")
       # Fetch 100 latest updated manga
       else:
         print(f"Updated latest manga updates.")
         fetcher.fetchLatest()
-        print("Fetch Latest Done!")
+        print("Fetch Latest Done!", end="\n\n")
     
   except KeyboardInterrupt:
     print("\nKeyboardInterrupt caught! Exiting gracefully.")

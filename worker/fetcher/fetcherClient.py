@@ -1,5 +1,6 @@
 import requests
 from database.mongo import MongoDB
+import asyncio
 
 """ 
 
@@ -99,11 +100,13 @@ class Fetcher():
       return
 
   # Return an exact date of the latest uploaded chapter
-  def __fetchLatestUploadedChapter(self, id:str):
+  async def __fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
       res = requests.get(f"https://api.mangadex.org/chapter/{id}", timeout=10)
+      
+      await asyncio.sleep(1)
 
       if not res.ok:
         raise Exception({"status":"500", "msg": res})
