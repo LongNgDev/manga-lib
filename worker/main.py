@@ -1,6 +1,5 @@
 from fetcher.fetcherClient import Fetcher
 from database.mongo import MongoDB
-import asyncio
 import time
 
 
@@ -11,7 +10,7 @@ def init():
   fetcher = Fetcher(db=db)
   return db, fetcher
 
-async def main():
+def main():
   db, fetcher = init()
 
   try:
@@ -21,12 +20,12 @@ async def main():
       # Fetch all if the database is empty
       if db.get_total() <= 0:
         print(f"Initialising database by fetching all the data from source.")
-        await fetcher.fetchAll()
+        fetcher.fetchAll()
         print("Fetch All Done!", end="\n\n")
       # Fetch 100 latest updated manga
       else:
         print(f"Updated latest manga updates.")
-        await fetcher.fetchLatest()
+        fetcher.fetchLatest()
         print("Fetch Latest Done!", end="\n\n")
 
       time.sleep(300)
@@ -40,4 +39,4 @@ async def main():
     return
 
 
-asyncio.run(main())
+main()

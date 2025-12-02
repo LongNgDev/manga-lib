@@ -1,6 +1,8 @@
 import requests
 from database.mongo import MongoDB
-import asyncio
+from datetime import datetime
+import pytz
+import json
 
 """ 
 
@@ -24,7 +26,7 @@ class Fetcher():
 
 
   
-  async def fetchAll(self):
+  def fetchAll(self):
     if self.base_url is None: return
 
     # This lock only let this function run only once
@@ -57,7 +59,7 @@ class Fetcher():
         self.__offset += self.__limit 
 
         # Extract raw data list from the response
-        raw_data = await res.json().get("data")
+        raw_data = res.json().get("data")
 
         # SAVE manga to database
         for manga in raw_data:
@@ -72,7 +74,7 @@ class Fetcher():
     
   
 
-  async def fetchLatest(self):
+  def fetchLatest(self):
     if self.base_url is None: return
 
     try:
@@ -91,7 +93,7 @@ class Fetcher():
           raise Exception ({"err": res.raise_for_status()})
       
       # Extract raw data list from the response
-      raw_data = await res.json().get("data")
+      raw_data = res.json().get("data")
 
       # SAVE manga to database
       for manga in raw_data:
@@ -105,18 +107,21 @@ class Fetcher():
     finally:
       return
 
-  # Return an exact date of the latest uploaded chapter
-  async def __fetchLatestUploadedChapter(self, id:str):
+  # Return an exact date of the latest uploaded chapter by tracking publishAt values.
+  def __fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
+      # Getting info about chapter from mangaDex
       res = requests.get(f"https://api.mangadex.org/chapter/{id}", timeout=10)
 
       if not res.ok:
         raise Exception({"status":"500", "msg": res})
-
-      data = await res.json().get("data").get("attributes").get("publishAt")
-      return data
+      
+      data = res.json().get("data").get("attributes").get("publishAt") # Extract publish date from the chapter data 
+      utc = datetime.fromisoformat(data)
+      publishedAt = utc.astimezone(pytz.timezone("Australia/Melbourne")).isoformat()
+      return publishedAt
     
     except Exception as e:
       print(e)
@@ -146,5 +151,5 @@ if __name__ == "__main__":
   fetcher = Fetcher()
 
 
-  # asyncio.run(fetcher.fetchAll())
-  asyncio.run(fetcher.fetchLatest())
+  # fetcher.fetchAll())
+  fetcher.fetchLatest()
