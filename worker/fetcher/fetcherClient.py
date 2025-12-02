@@ -2,7 +2,7 @@ import requests
 from database.mongo import MongoDB
 from datetime import datetime
 import pytz
-import json
+import time
 
 """ 
 
@@ -69,6 +69,9 @@ class Fetcher():
 
       except Exception as e:
         print(f"Errors: {e}")
+      
+      finally:
+        time.sleep(60)
 
     self.__offset = 0
     
