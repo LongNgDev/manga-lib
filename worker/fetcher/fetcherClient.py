@@ -24,7 +24,7 @@ class Fetcher():
 
 
   
-  def fetchAll(self):
+  async def fetchAll(self):
     if self.base_url is None: return
 
     # This lock only let this function run only once
@@ -57,7 +57,7 @@ class Fetcher():
         self.__offset += self.__limit 
 
         # Extract raw data list from the response
-        raw_data = res.json().get("data")
+        raw_data = await res.json().get("data")
 
         # SAVE manga to database
         for manga in raw_data:
@@ -68,14 +68,20 @@ class Fetcher():
       except Exception as e:
         print(f"Errors: {e}")
 
-  def fetchLatest(self):
+    self.__offset = 0
+    
+  
+
+  async def fetchLatest(self):
+    if self.base_url is None: return
+
     try:
       res = requests.get(f"{self.base_url}/manga", {
           "limit": self.__limit,
           "offset": self.__offset,
           "excludedTags[]": self.__exclude_tags,
           "includes[]": self.__expansion_opts,
-          "availableTranslatedLanguage[]": ["en", "vi"], 
+          "availableTranslatedLanguage[]": ["en", "vi"],
           "order[latestUploadedChapter]":"desc",
           # "hasAvailableChapters": "1", # True
         }, timeout=10)
@@ -85,7 +91,7 @@ class Fetcher():
           raise Exception ({"err": res.raise_for_status()})
       
       # Extract raw data list from the response
-      raw_data = res.json().get("data")
+      raw_data = await res.json().get("data")
 
       # SAVE manga to database
       for manga in raw_data:
@@ -100,7 +106,7 @@ class Fetcher():
       return
 
   # Return an exact date of the latest uploaded chapter
-  def __fetchLatestUploadedChapter(self, id:str):
+  async def __fetchLatestUploadedChapter(self, id:str):
     if not id: return
 
     try:
@@ -109,7 +115,7 @@ class Fetcher():
       if not res.ok:
         raise Exception({"status":"500", "msg": res})
 
-      data = res.json().get("data").get("attributes").get("updatedAt")
+      data = await res.json().get("data").get("attributes").get("publishAt")
       return data
     
     except Exception as e:
@@ -134,13 +140,11 @@ class Fetcher():
       return
     
 
-  def getLatestManga(self):
-    data = self.mongo_client.get_latest(limit=2)
-    return data
+
 
 if __name__ == "__main__":
   fetcher = Fetcher()
 
 
-  # fetcher.fetchAll()
-  fetcher.fetchLatest()
+  # asyncio.run(fetcher.fetchAll())
+  asyncio.run(fetcher.fetchLatest())
