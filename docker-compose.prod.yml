@@ -33,7 +33,7 @@ services:
 
   worker:
     container_name: manga-worker
-    image: nightwolfff/manga-dev:worker
+    image: nightwolfff/manga-dev-worker:latest
     command: ["python", "main.py"]
 
     environment:
@@ -47,7 +47,7 @@ services:
   server:
     container_name: manga-server
     # build: ./server
-    image: nightwolfff/manga-dev:server
+    image: nightwolfff/manga-dev-server:latest
     command: ["npm", "run", "dev"]
     env_file:
       - .env.prod

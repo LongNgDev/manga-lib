@@ -121,7 +121,7 @@ class Fetcher():
       if not res.ok:
         raise Exception({"status":"500", "msg": res})
       
-      data = res.json().get("data").get("attributes").get("publishAt") # Extract publish date from the chapter data 
+      data = res.json().get("data").get("attributes").get("updatedAt") # Extract publish date from the chapter data 
       utc = datetime.fromisoformat(data)
       publishedAt = utc.astimezone(pytz.timezone("Australia/Melbourne")).isoformat()
       return publishedAt
@@ -155,4 +155,6 @@ if __name__ == "__main__":
 
 
   # fetcher.fetchAll())
-  fetcher.fetchLatest()
+  # fetcher.fetchLatest()
+  # res = fetcher.fetchLatestUploadedChapter("9e74f777-0696-4cc5-8fc6-7b39fbfd5144")
+  # print(res)
