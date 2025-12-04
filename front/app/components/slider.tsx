@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
 	Carousel,
 	CarouselContent,
@@ -13,12 +13,13 @@ import { Badge } from "@/components/ui/badge";
 // Assets
 import bgImg from "../assets/demo.jpg";
 import Image from "next/image";
-import { Clock4, Clock4Icon } from "lucide-react";
+import { Clock4, MoveRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function TopMangaSlider() {
 	return (
 		<Carousel
-			className="flex items-center w-full h-[250px]"
+			className="flex items-center w-full"
 			opts={{ align: "start", loop: true }}
 		>
 			<CarouselContent>
@@ -36,7 +37,10 @@ export function TopMangaSlider() {
 							className="absolute top-0 left-0 -translate-y-1/6 -z-20"
 						/>
 
-						<Card className="h-[200px] border-0 shadow-none bg-accent/0 outline-0">
+						<Card className="h-[250px] border-0 shadow-none bg-accent/0 outline-0 pt-10 gap-0">
+							<CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
+								Popular New Titles
+							</CardHeader>
 							<CardContent className="flex items-center gap-2 px-2 grow">
 								{/* Thumbnail Cover Image */}
 								<Image
@@ -60,25 +64,25 @@ export function TopMangaSlider() {
 											</h3>
 											<div className="flex gap-1 py-1">
 												<Badge
-													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-bold"
+													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
 													variant={"destructive"}
 												>
 													Suggestive
 												</Badge>
 												<Badge
-													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-bold"
+													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
 													variant={"default"}
 												>
 													Action
 												</Badge>
 												<Badge
-													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-bold"
+													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
 													variant={"default"}
 												>
 													Romcom
 												</Badge>
 												<Badge
-													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-bold"
+													className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
 													variant={"default"}
 												>
 													Slice of Life
@@ -93,6 +97,10 @@ export function TopMangaSlider() {
 											character.`}
 										</p>
 									</div>
+									<Button className="h-fit w-fit text-[9px] px-1! py-1! items-end">
+										<span>View details</span>
+										<MoveRight className="size-2.5" />
+									</Button>
 									<div className="text-[9px] flex justify-between items-baseline">
 										<span className="line-clamp-1">
 											Monjūsaki , Cygames, Hotani Shin
