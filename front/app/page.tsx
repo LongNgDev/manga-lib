@@ -2,15 +2,41 @@ import { TopMangaSlider } from "./components/slider";
 
 import bgImg from "./assets/demo.jpg";
 import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
-import { Bookmark, MoveRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import { Bookmark, MoveRight, Search } from "lucide-react";
 
 export default function Home() {
 	return (
 		<div className="text-xs w-vw min-h-vh">
 			<main className="relative w-full overflow-hidden">
 				{/* Navbar Section */}
-				<div className="fixed top-0 left-0 z-10 w-full">Nav</div>
+				<div className="fixed top-0 left-0 z-10 w-full h-10">
+					<div className="flex justify-between items-center p-2 h-full">
+						<div className="flex gap-1">
+							{/* <div>Logo</div> */}
+							<h1>MangaLib</h1>
+						</div>
+						<div className="flex gap-4">
+							<div className="flex items-center gap-1">
+								<Input
+									className="h-fit w-40 rounded-sm text-[8px] font-semibold px-2 bg-accent/90! border-none"
+									placeholder="Search"
+								/>
+								<Search className="h-3 w-auto" />
+							</div>
+							<div className="h-full">
+								<Avatar className="h-6 w-auto">
+									<AvatarImage src="https://github.com/shadcn.png" />
+									<AvatarFallback>CN</AvatarFallback>
+								</Avatar>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				{/* Top 10 Section */}
 				<div className="w-full md:h-[500px]">

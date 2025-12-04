@@ -25,7 +25,7 @@ export function TopMangaSlider() {
 			<CarouselContent>
 				{Array.from({ length: 5 }).map((_, index) => (
 					<CarouselItem key={index} className="relative">
-						<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-accent via-70% via-accent/75 to-accent/50 -z-10 pointer-events-none"></div>
+						<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-accent via-70% via-accent/75 to-accent/70 -z-10 pointer-events-none"></div>
 						<Image
 							src={bgImg}
 							alt="Background image"
