@@ -71,7 +71,11 @@ class MongoDB():
     
     # Perform update or add to database using upsert
     res = self.__collection.update_one(query_filter, update_operation, upsert = True)
-    print(res)
+    if res.did_upsert:
+      print(f"Add '{id}' to database.")
+    
+    if res.modified_count:
+      print(f"Update '{id}' in database.")
     
     return res
 
@@ -108,8 +112,20 @@ class MongoDB():
 
     return self.__collection.find().to_list()
 
+  # DELETE
 
+  # Delete manga
+  def delete_manga(self, id):
+    if self.__collection is None:
+      self.is_connected()
+      return False
+    
+    if not id:
+      return False
 
+    res = self.__collection.delete_one({"id": id})
+    
+    return res
 
 
 if __name__ == "__main__":

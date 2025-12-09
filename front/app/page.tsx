@@ -12,7 +12,7 @@ import { Bookmark, MoveRight, Search } from "lucide-react";
 export default function Home() {
 	return (
 		<div className="text-xs w-vw min-h-vh">
-			<main className="relative w-full overflow-hidden">
+			<main className="relative w-full overflow-auto">
 				{/* Navbar Section */}
 				<div className="fixed top-0 left-0 z-10 w-full h-10">
 					<div className="flex justify-between items-center p-2 h-full">
@@ -23,7 +23,7 @@ export default function Home() {
 						<div className="flex gap-4">
 							<div className="flex items-center gap-1">
 								<Input
-									className="h-fit w-40 rounded-sm text-[8px] font-semibold px-2 bg-accent/90! border-none"
+									className="h-fit w-20 focus:w-35 transition-all duration-400 ease-in-out rounded-sm text-[8px] font-semibold px-2 bg-accent/90! border-none"
 									placeholder="Search"
 								/>
 								<Search className="h-3 w-auto" />
@@ -43,7 +43,10 @@ export default function Home() {
 					{/* Main Container */}
 					<div className="relative h-full grow">
 						{/* Content Container */}
-						<div className="relative flex items-center justify-center w-full h-full">
+						<div className="relative flex  items-center justify-center w-full h-full">
+							<h2 className="absolute left-1.5 top-10 z-20 text-xs font-semibold tracking-wide">
+								Popular New Titles
+							</h2>
 							<TopMangaSlider />
 						</div>
 					</div>
@@ -107,7 +110,6 @@ export default function Home() {
 								<Image
 									src={bgImg}
 									alt="Thumbnail Image"
-									objectFit="cover"
 									fill
 									style={{
 										objectFit: "cover",

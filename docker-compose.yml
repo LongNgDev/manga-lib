@@ -14,7 +14,7 @@ services:
       MONGO_INITDB_DATABASE: manga-lib
     volumes: ["./mongo/data:/data/db"]
     networks: [mangaLib_net]
-    # ports: ["27017:27017"] # DEV ONLY
+    ports: ["27017:27017"] # DEV ONLY
     restart: unless-stopped
     healthcheck:
       test:
@@ -36,8 +36,8 @@ services:
     container_name: manga-worker
     build: ./worker
     command: ["python", "main.py"]
-    # volumes:
-    #   - ./worker:/app/worker
+    volumes:
+      - ./worker:/app/worker
     environment:
       MONGO_URI: "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin"
     depends_on:
@@ -50,8 +50,8 @@ services:
     container_name: manga-server
     build: ./server
     command: ["npm", "run", "dev"]
-    # volumes:
-    #   - ./server:/app/server
+    volumes:
+      - ./server:/app/server
     environment:
       - MONGO_URI=${MONGO_URI}
       - PORT=${PORT}
@@ -63,8 +63,8 @@ services:
         condition: service_healthy
     networks:
       - mangaLib_net
-    # ports:
-    #   - 4000:4000
+    ports:
+      - 4000:4000
     restart: unless-stopped
 
   # nginx:

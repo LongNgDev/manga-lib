@@ -13,19 +13,18 @@ import { Badge } from "@/components/ui/badge";
 // Assets
 import bgImg from "../assets/demo.jpg";
 import Image from "next/image";
-import { Clock4, MoveRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Clock4 } from "lucide-react";
 
 export function TopMangaSlider() {
 	return (
 		<Carousel
-			className="flex items-center w-full"
+			className="flex items-center w-full "
 			opts={{ align: "start", loop: true }}
 		>
 			<CarouselContent>
 				{Array.from({ length: 5 }).map((_, index) => (
 					<CarouselItem key={index} className="relative">
-						<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-accent via-70% via-accent/75 to-accent/70 -z-10 pointer-events-none"></div>
+						<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-accent via-75% via-accent/85 to-accent/80 -z-10 pointer-events-none"></div>
 						<Image
 							src={bgImg}
 							alt="Background image"
@@ -37,10 +36,10 @@ export function TopMangaSlider() {
 							className="absolute top-0 left-0 -translate-y-1/6 -z-20"
 						/>
 
-						<Card className="h-[250px] border-0 shadow-none bg-accent/0 outline-0 pt-10 gap-0">
-							<CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
+						<Card className="h-64 gap-0 border-0 shadow-none bg-accent/0 outline-0 pt-18">
+							{/* <CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
 								Popular New Titles
-							</CardHeader>
+							</CardHeader> */}
 							<CardContent className="flex items-center gap-2 px-2 grow">
 								{/* Thumbnail Cover Image */}
 								<Image
@@ -49,7 +48,7 @@ export function TopMangaSlider() {
 									style={{
 										objectFit: "cover",
 									}}
-									className="h-full w-25 rounded-xs"
+									className="h-full w-30 rounded-xs"
 								/>
 
 								{/* Manga Content */}
@@ -89,19 +88,19 @@ export function TopMangaSlider() {
 												</Badge>
 											</div>
 										</div>
-										<p className="text-[9px] font-light line-clamp-3">
-											{`The popular cross-media content "Uma Musume Pretty Derby"
+										<div className="flex flex-col gap-2">
+											<p className="text-[9px] font-light line-clamp-6">
+												{`The popular cross-media content "Uma Musume Pretty Derby"
 											features "Uma Musume" who have inherited the names and
 											souls of numerous racehorses! A new legend begins with the
 											indomitable horse girl "Sakura Laurel" as the main
 											character.`}
-										</p>
+											</p>
+										</div>
 									</div>
-									<Button className="h-fit w-fit text-[9px] px-1! py-1! items-end">
-										<span>View details</span>
-										<MoveRight className="size-2.5" />
-									</Button>
-									<div className="text-[9px] flex justify-between items-baseline">
+
+									{/* Author section */}
+									<div className="text-[9px] flex justify-between items-baseline border-t pt-1">
 										<span className="line-clamp-1">
 											Monjūsaki , Cygames, Hotani Shin
 										</span>
@@ -118,8 +117,14 @@ export function TopMangaSlider() {
 					</CarouselItem>
 				))}
 			</CarouselContent>
-			<CarouselPrevious />
-			<CarouselNext />
+			<CarouselPrevious
+				className="absolute left-0 h-full w-15"
+				variant={"ghost"}
+			/>
+			<CarouselNext
+				className="absolute right-0 h-full w-15"
+				variant={"ghost"}
+			/>
 		</Carousel>
 	);
 }

@@ -1,6 +1,6 @@
 import requests
 from database.mongo import MongoDB
-from datetime import datetime
+from datetime import datetime, timezone
 import pytz
 import time
 
@@ -81,6 +81,7 @@ class Fetcher():
     if self.base_url is None: return
 
     try:
+      print(f"Fetching latest updates with (limit: {self.__limit}, offset: {self.__offset})")
       res = requests.get(f"{self.base_url}/manga", {
           "limit": self.__limit,
           "offset": self.__offset,
@@ -117,14 +118,18 @@ class Fetcher():
     try:
       # Getting info about chapter from mangaDex
       res = requests.get(f"https://api.mangadex.org/chapter/{id}", timeout=10)
-
       if not res.ok:
         raise Exception({"status":"500", "msg": res})
       
-      data = res.json().get("data").get("attributes").get("updatedAt") # Extract publish date from the chapter data 
-      utc = datetime.fromisoformat(data)
-      publishedAt = utc.astimezone(pytz.timezone("Australia/Melbourne")).isoformat()
-      return publishedAt
+      updatedAt = res.json().get("data").get("attributes").get("updatedAt") # Extract publish date from the chapter data 
+      # updatedAtMelbourneTimezone = datetime.fromisoformat(updatedAt).astimezone(pytz.timezone("Australia/Melbourne")).isoformat()
+      currentUTC = datetime.now(timezone.utc).isoformat()
+
+      # Check if the publish date is validated
+      if updatedAt > currentUTC:
+        raise Exception({"status": 500, "msg": "Publish date is far from current time!"}) 
+      
+      return updatedAt
     
     except Exception as e:
       print(e)
@@ -143,7 +148,6 @@ class Fetcher():
 
       if dateFormat is None: continue
       manga["attributes"]["latestUploadedChapter"] = dateFormat
-      print(latestChapterId, manga)
       self.mongo_client.save(manga)
       return
     
@@ -155,6 +159,6 @@ if __name__ == "__main__":
 
 
   # fetcher.fetchAll())
-  # fetcher.fetchLatest()
-  # res = fetcher.fetchLatestUploadedChapter("9e74f777-0696-4cc5-8fc6-7b39fbfd5144")
+  fetcher.fetchLatest() 
+  # res = fetcher.fetchLatestUploadedChapter("d37be610-0a56-48c6-986e-637f4b3dee62")
   # print(res)
