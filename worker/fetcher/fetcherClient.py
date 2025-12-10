@@ -102,11 +102,19 @@ class Fetcher():
       # SAVE manga to database
       for manga in raw_data:
         latestChapterId = manga["attributes"]["latestUploadedChapter"] # Extract latest chapter ID
-        manga["attributes"]["latestUploadedChapter"] = self.__fetchLatestUploadedChapter(latestChapterId) # Assign date to this key
-        self.mongo_client.save(manga)
+        getChapterId = self.mongo_client.get_latestChapterId(manga["id"])
+
+        # Only fetch if the chapter id is different
+        if latestChapterId == getChapterId: return
+
+        manga["attributes"]["latestUploadedChapterTimeStamp"] = self.__fetchLatestUploadedChapter(latestChapterId) # Assign date to this key
+        print(manga["attributes"]["title"], manga["attributes"]["latestUploadedChapterTimeStamp"])
+        
+        self.mongo_client.save(manga) # Save to the database
 
     except Exception as err:
       print(err)
+      return
 
     finally:
       return

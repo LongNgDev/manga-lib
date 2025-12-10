@@ -4,7 +4,6 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Bookmark, MoveRight } from "lucide-react";
-import { useState } from "react";
 
 type Manga = {
 	id: string;

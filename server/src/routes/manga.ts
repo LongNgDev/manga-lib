@@ -15,15 +15,16 @@ router.get("/health", (_req: Request, res: Response) => {
 // Get latest manga with limit, default at 10
 router.get("/latest_updated", async (req: Request, res: Response) => {
 	const LIMIT: number = Number(req.query.limit) || 10;
+	const OFFSET: number = Number(req.query.offset) || 0;
 
 	try {
 		const data = await col
 			.find({})
-			.sort({ "attributes.latestUploadedChapter": -1 })
+			.sort({ "attributes.latestUploadedChapterTimeStamp": -1 })
 			.limit(LIMIT)
+			.skip(OFFSET)
 			.toArray();
 
-		// if (!data) return res.status(500).json({ msg: "Data missing!" });
 		if (!data) throw Error("Missing data!");
 
 		return res.status(200).json(data);

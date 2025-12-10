@@ -3,6 +3,7 @@ from pymongo import MongoClient, DESCENDING
 from pymongo.errors import ConnectionFailure
 import dotenv
 # from pymongo.errors
+from bson.json_util import dumps
 
 envPath = dotenv.find_dotenv()
 dbURI = dotenv.dotenv_values(envPath).get("MONGO_URI")
@@ -10,7 +11,8 @@ dbURI = dotenv.dotenv_values(envPath).get("MONGO_URI")
 class MongoDB():
 
   def __init__(self):
-    self.db_uri = dbURI or "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin" 
+    # self.db_uri = dbURI or "mongodb://admin:admin@mongo:27017/manga-lib?authSource=admin" 
+    self.db_uri = "mongodb://localhost:27017/manga-lib" 
     self.client = None
     self.__database = None
     self.__collection = None
@@ -61,6 +63,10 @@ class MongoDB():
 
   # SAVE: add or update item from database, using upsert
   def save(self, data:dict):
+    if data is None:
+      print("Data is empty!")
+      return
+
     if self.__collection is None:
       print("Collection not found!")
       self.connect()
@@ -72,14 +78,25 @@ class MongoDB():
     # Perform update or add to database using upsert
     res = self.__collection.update_one(query_filter, update_operation, upsert = True)
     if res.did_upsert:
-      print(f"Add '{id}' to database.")
+      print(f"Add '{data["attributes"]["title"]}' to database.")
     
     if res.modified_count:
-      print(f"Update '{id}' in database.")
+      print(f"Update '{data["attributes"]["title"]}' in database.")
     
     return res
 
-  # RETRIEVE: return 
+  # RETRIEVE: return
+
+  #RETRIEVE: return the latestUploadedChapter id
+  def get_latestChapterId(self, manga_id):
+    if self.__collection is None:
+      self.is_connected()
+      return False
+    
+    res = self.__collection.find({"id": manga_id}).to_list()
+    if len(res) <= 0: return ""
+    return res[0]["attributes"]["latestUploadedChapter"]
+
 
   # RETRIEVE: return the total item in collections
   def get_total(self) -> int | bool:
