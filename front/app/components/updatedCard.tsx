@@ -10,18 +10,19 @@ type Manga = {
 	id: string;
 	title: string;
 	altTitle?: string;
-	coverId: string;
-	publishedAt: Date;
+	coverId: string | undefined;
+	publishedAt: string;
 };
 
-function UpdatedCard({ data }: { data: Manga }) {
-	const [isToggle, setToggle] = useState(false);
-
-	const infoToggle = () => {
-		const state = !isToggle;
-		setToggle(state);
-	};
-
+function UpdatedCard({
+	data,
+	isToggle,
+	infoToggle,
+}: {
+	data: Manga;
+	isToggle: string | undefined;
+	infoToggle: (id: string) => void;
+}) {
 	return (
 		<div
 			className="relative w-full overflow-hidden select-none h-34 group"
@@ -29,7 +30,8 @@ function UpdatedCard({ data }: { data: Manga }) {
 				// Only toggle on mobile / touch devices
 				if (window.matchMedia("(hover: none)").matches) {
 					e.preventDefault();
-					infoToggle();
+					if (isToggle == data.id) infoToggle("");
+					else infoToggle(data.id);
 				}
 			}}
 		>
@@ -37,21 +39,25 @@ function UpdatedCard({ data }: { data: Manga }) {
 			<div
 				className={[
 					"absolute z-10 w-full h-full transition-all duration-500 ease-in-out bg-accent/95 group-hover:opacity-100",
-					isToggle ? "opacity-100" : "opacity-0",
+					isToggle == data.id ? "opacity-100" : "opacity-0",
 				].join(" ")}
 			>
 				{/* Manga details */}
 				<div className="p-1 grid grid-rows-5 h-full gap-0.5">
-					{/* Title */}
-					<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
-						{/* Uma Musume - Pretty Derby: Star Blossom */}
-						{data.title}
-					</h2>
-					{/* Alternative Title */}
-					<h3 className="text-[7px] italic line-clamp-2 h-fit">
-						{/* ウマ娘　プリティーダービー　スターブロッサム */}
-						{data.altTitle}
-					</h3>
+					<div className="grid row-span-2">
+						<div className="flex flex-col gap-1">
+							{/* Title */}
+							<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
+								{/* Uma Musume - Pretty Derby: Star Blossom */}
+								{data.title}
+							</h2>
+							{/* Alternative Title */}
+							<h3 className="text-[7px] italic line-clamp-2 h-fit">
+								{/* ウマ娘　プリティーダービー　スターブロッサム */}
+								{data.altTitle}
+							</h3>
+						</div>
+					</div>
 					{/* Chapter List */}
 					<div className="row-span-2 px-1">
 						<div className="grid row-auto h-full text-[8px] py-1">
