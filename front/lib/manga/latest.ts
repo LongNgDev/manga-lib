@@ -2,7 +2,7 @@
 
 export async function getLatest() {
 	const res = await fetch(
-		"https://manga.code-coffee.com/api/manga/latest_updated",
+		"https://manga.code-coffee.com/api/manga/latest_updated?limit=10",
 		{
 			method: "GET",
 			next: { revalidate: 300 },

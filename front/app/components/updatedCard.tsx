@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import bgImg from "../assets/demo.jpg";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Bookmark, MoveRight } from "lucide-react";
+import { useState } from "react";
 
 type Manga = {
 	id: string;
@@ -16,118 +15,75 @@ type Manga = {
 };
 
 function UpdatedCard({ data }: { data: Manga }) {
-	const [isOpen, setOpen] = useState(false);
+	const [isToggle, setToggle] = useState(false);
 
-	const toggleCard = () => {
-		const state = !isOpen;
-		setOpen(state);
+	const infoToggle = () => {
+		const state = !isToggle;
+		setToggle(state);
 	};
 
 	return (
 		<div
-			className="relative w-full select-none h-34 overflow-hidden group"
+			className="relative w-full overflow-hidden select-none h-34 group"
 			onClick={(e) => {
-				e.preventDefault();
-				toggleCard();
+				// Only toggle on mobile / touch devices
+				if (window.matchMedia("(hover: none)").matches) {
+					e.preventDefault();
+					infoToggle();
+				}
 			}}
 		>
-			{isOpen ? (
-				<>
-					{/* Blur backdrop */}
-					<div className="absolute z-10 w-full h-full bg-accent/95">
-						{/* Manga details */}
-						<div className="p-1 grid grid-rows-5 gap-0.5 max-h-full">
-							{/* Title */}
-							<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
-								{/* Uma Musume - Pretty Derby: Star Blossom */}
-								{data.title}
-							</h2>
-							{/* Alternative Title */}
-							<h3 className="text-[7px] italic line-clamp-2 h-fit">
-								{/* ウマ娘　プリティーダービー　スターブロッサム */}
-								{data.altTitle}
-							</h3>
-							{/* Chapter List */}
-							<div className="row-span-2 px-1">
-								<div className="grid row-auto h-full text-[8px] py-1">
-									{Array.from({ length: 3 }).map((_, index) => (
-										<div
-											key={index}
-											className="flex items-baseline justify-between gap-1 h-fit"
-										>
-											<h3>chapter {index + 1}</h3>
-											<div className="self-end my-0.5 border-b border-dotted grow border-accent-foreground"></div>
-											<span className="text-[6px]">50 mins ago</span>
-										</div>
-									))}
-								</div>
-							</div>
-
-							{/* CTA button */}
-							<div className="flex items-center justify-between w-full h-full">
-								<Bookmark size={15} />
-
-								<Button
-									variant={"default"}
-									className="px-1! py-0.5! rounded-sm h-fit gap-1"
-									size={"sm"}
+			{/* Blur backdrop */}
+			<div
+				className={[
+					"absolute z-10 w-full h-full transition-all duration-500 ease-in-out bg-accent/95 group-hover:opacity-100",
+					isToggle ? "opacity-100" : "opacity-0",
+				].join(" ")}
+			>
+				{/* Manga details */}
+				<div className="p-1 grid grid-rows-5 h-full gap-0.5">
+					{/* Title */}
+					<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
+						{/* Uma Musume - Pretty Derby: Star Blossom */}
+						{data.title}
+					</h2>
+					{/* Alternative Title */}
+					<h3 className="text-[7px] italic line-clamp-2 h-fit">
+						{/* ウマ娘　プリティーダービー　スターブロッサム */}
+						{data.altTitle}
+					</h3>
+					{/* Chapter List */}
+					<div className="row-span-2 px-1">
+						<div className="grid row-auto h-full text-[8px] py-1">
+							{Array.from({ length: 3 }).map((_, index) => (
+								<div
+									key={index}
+									className="flex items-baseline justify-between gap-1 h-fit"
 								>
-									<span className="text-[8px] font-semibold">View details</span>
-									<MoveRight className="size-2" />
-								</Button>
-							</div>
+									<h3>chapter {index + 1}</h3>
+									<div className="self-end my-0.5 border-b border-dotted grow border-accent-foreground"></div>
+									<span className="text-[6px]">50 mins ago</span>
+								</div>
+							))}
 						</div>
 					</div>
-				</>
-			) : (
-				<>
-					{/* Blur backdrop */}
-					<div className="absolute z-10 w-full h-full bg-accent/95 translate-y-full group-hover:translate-y-0">
-						{/* Manga details */}
-						<div className="p-1 grid grid-rows-5 gap-0.5 max-h-full">
-							{/* Title */}
-							<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
-								{/* Uma Musume - Pretty Derby: Star Blossom */}
-								{data.title}
-							</h2>
-							{/* Alternative Title */}
-							<h3 className="text-[7px] italic line-clamp-2 h-fit">
-								{/* ウマ娘　プリティーダービー　スターブロッサム */}
-								{data.altTitle}
-							</h3>
-							{/* Chapter List */}
-							<div className="row-span-2 px-1">
-								<div className="grid row-auto h-full text-[8px] py-1">
-									{Array.from({ length: 3 }).map((_, index) => (
-										<div
-											key={index}
-											className="flex items-baseline justify-between gap-1 h-fit"
-										>
-											<h3>chapter {index + 1}</h3>
-											<div className="self-end my-0.5 border-b border-dotted grow border-accent-foreground"></div>
-											<span className="text-[6px]">50 mins ago</span>
-										</div>
-									))}
-								</div>
-							</div>
 
-							{/* CTA button */}
-							<div className="flex items-center justify-between w-full h-full">
-								<Bookmark size={15} />
+					{/* CTA button */}
+					<div className="flex items-center justify-between w-full h-full">
+						<Bookmark size={15} />
 
-								<Button
-									variant={"default"}
-									className="px-1! py-0.5! rounded-sm h-fit gap-1"
-									size={"sm"}
-								>
-									<span className="text-[8px] font-semibold">View details</span>
-									<MoveRight className="size-2" />
-								</Button>
-							</div>
-						</div>
+						<Button
+							variant={"default"}
+							className="px-1! py-0.5! rounded-sm h-fit gap-1"
+							size={"sm"}
+						>
+							<span className="text-[8px] font-semibold">View details</span>
+							<MoveRight className="size-2" />
+						</Button>
 					</div>
-				</>
-			)}
+				</div>
+			</div>
+
 			{/* Background Image */}
 			<Image
 				// src={bgImg}

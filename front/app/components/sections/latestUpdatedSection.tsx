@@ -1,5 +1,3 @@
-"use server";
-
 import UpdatedCard from "../updatedCard";
 import { getLatest } from "@/lib/manga/latest";
 
