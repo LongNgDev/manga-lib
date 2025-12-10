@@ -3,7 +3,8 @@ import { TopMangaSlider } from "./components/slider";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import UpdatedSection from "./components/updatedCard";
+import UpdatedCard from "./components/updatedCard";
+import LatestUpdatedSection from "./components/sections/latestUpdatedSection";
 
 export default function Home() {
 	return (
@@ -33,7 +34,6 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
-
 				{/* Top 10 Section */}
 				<div className="w-full md:h-[500px]">
 					{/* Main Container */}
@@ -49,18 +49,8 @@ export default function Home() {
 					</div>
 				</div>
 				{/* My Library Section */}
-
 				{/* Latest Updated Section */}
-				<div className="flex flex-col w-full gap-2 p-2 bg-accent">
-					<h2 className="font-semibold">Recent Updates</h2>
-					<div className="grid grid-cols-4 row-auto gap-2">
-						{Array.from({ length: 20 }).map((_, index) => (
-							<div key={index}>
-								<UpdatedSection />
-							</div>
-						))}
-					</div>
-				</div>
+				<LatestUpdatedSection />
 			</main>
 		</div>
 	);
