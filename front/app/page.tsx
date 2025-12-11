@@ -3,8 +3,8 @@ import { TopMangaSlider } from "./components/slider";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import UpdatedCard from "./components/updatedCard";
 import LatestUpdatedSection from "./components/sections/latestUpdatedSection";
+import PopularMangaSection from "./components/sections/popularMangaSection";
 
 export default function Home() {
 	return (
@@ -44,6 +44,7 @@ export default function Home() {
 								Popular New Titles
 							</h2>
 
+							{/* <PopularMangaSection /> */}
 							<TopMangaSlider />
 						</div>
 					</div>
