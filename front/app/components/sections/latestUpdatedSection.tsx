@@ -9,6 +9,18 @@ type MangaSchema = {
 		title: string;
 		altTitles: string[];
 		latestUploadedChapter: string;
+		chapters: [
+			{
+				chapter: string;
+				id: string;
+				data: {
+					attributes: {
+						updatedAt: string;
+						translatedLanguage: string;
+					};
+				};
+			}
+		];
 	};
 	relationships: [
 		{
@@ -41,6 +53,8 @@ function LatestUpdatedSection() {
 			const data = await res.json();
 			setManga(data);
 			setLoading(false);
+
+			console.log(data[0].attributes.chapters);
 		};
 
 		fetchManga();
@@ -81,6 +95,11 @@ function LatestUpdatedSection() {
 										(entry) => entry.type == "cover_art"
 									)?.attributes.fileName,
 									publishedAt: item.attributes.latestUploadedChapter,
+									chapters: item.attributes.chapters.filter((chapter) =>
+										["en", "vi"].includes(
+											chapter.data.attributes.translatedLanguage
+										)
+									),
 								}}
 							/>
 						</div>

@@ -5,12 +5,29 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Bookmark, MoveRight } from "lucide-react";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
 type Manga = {
 	id: string;
 	title: string;
 	altTitle?: string;
 	coverId: string | undefined;
 	publishedAt: string;
+	chapters: [
+		{
+			chapter: string;
+			id: string;
+			data: {
+				attributes: {
+					updatedAt: string;
+					translatedLanguage: string;
+				};
+			};
+		}
+	];
 };
 
 function UpdatedCard({
@@ -58,16 +75,19 @@ function UpdatedCard({
 						</div>
 					</div>
 					{/* Chapter List */}
-					<div className="row-span-2 px-1">
-						<div className="grid row-auto h-full text-[8px] py-1">
-							{Array.from({ length: 3 }).map((_, index) => (
+					<div className="row-span-2">
+						<div className="grid row-auto h-full text-[7px] py-1 font-light">
+							{/* {Array.from({ length: 3 }).map((_, index) => ( */}
+							{data.chapters.slice(0, 3).map((chapter) => (
 								<div
-									key={index}
+									key={chapter.id}
 									className="flex items-baseline justify-between gap-1 h-fit"
 								>
-									<h3>chapter {index + 1}</h3>
+									<h3>chapter {chapter.chapter}</h3>
 									<div className="self-end my-0.5 border-b border-dotted grow border-accent-foreground"></div>
-									<span className="text-[6px]">50 mins ago</span>
+									<span className="text-[6px]">
+										{dayjs(chapter.data.attributes.updatedAt).fromNow()}
+									</span>
 								</div>
 							))}
 						</div>
