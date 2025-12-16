@@ -85,6 +85,8 @@ export function TopMangaSlider() {
 									}`}
 									// src={bgImg}
 									fill
+									sizes="auto"
+									loading="eager"
 									alt="Background image"
 									style={{
 										objectFit: "cover",
@@ -109,6 +111,8 @@ export function TopMangaSlider() {
 												// src={bgImg}
 												fill
 												alt="Thumbnail image"
+												loading="eager"
+												sizes="auto"
 												style={{
 													objectFit: "contain",
 													width: "100%",
