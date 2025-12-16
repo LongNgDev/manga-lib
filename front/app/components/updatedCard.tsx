@@ -16,18 +16,16 @@ type Manga = {
 	altTitle?: string;
 	coverId: string | undefined;
 	publishedAt: string;
-	chapters: [
-		{
-			chapter: string;
-			id: string;
-			data: {
-				attributes: {
-					updatedAt: string;
-					translatedLanguage: string;
-				};
+	chapters: {
+		chapter: string;
+		id: string;
+		data: {
+			attributes: {
+				updatedAt: string;
+				translatedLanguage: string;
 			};
-		}
-	];
+		};
+	}[];
 };
 
 function UpdatedCard({

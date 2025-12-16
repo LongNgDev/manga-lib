@@ -9,18 +9,16 @@ type MangaSchema = {
 		title: string;
 		altTitles: string[];
 		latestUploadedChapter: string;
-		chapters: [
-			{
-				chapter: string;
-				id: string;
-				data: {
-					attributes: {
-						updatedAt: string;
-						translatedLanguage: string;
-					};
+		chapters: {
+			chapter: string;
+			id: string;
+			data: {
+				attributes: {
+					updatedAt: string;
+					translatedLanguage: string;
 				};
-			}
-		];
+			};
+		}[];
 	};
 	relationships: [
 		{
