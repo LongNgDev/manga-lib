@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 // Assets
-import bgImg from "../assets/demo.jpg";
 import Image from "next/image";
 import { Clock4 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,7 +20,20 @@ type MangaSchema = {
 	attributes: {
 		title: string;
 		altTitles: string[];
+		description: string;
 		latestUploadedChapter: string;
+		tags: [
+			{
+				id: string;
+				type: string;
+				attributes: {
+					name: {
+						en: string;
+					};
+					group: string;
+				};
+			}
+		];
 	};
 	relationships: [
 		{
@@ -84,9 +96,9 @@ export function TopMangaSlider() {
 									{/* <CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
 								Popular New Titles
 								</CardHeader> */}
-									<CardContent className="flex items-center gap-2 px-2 grow">
+									<CardContent className="flex items-center gap-2 px-2 grow h-full">
 										{/* Thumbnail Cover Image */}
-										<div className="relative h-full w-full py-1">
+										<div className="relative h-full min-w-30 py-1">
 											<Image
 												src={`/api/cover?id=${manga.id}&file=${
 													manga.relationships.find(
@@ -104,62 +116,76 @@ export function TopMangaSlider() {
 										</div>
 
 										{/* Manga Content */}
-										<div className="flex flex-col justify-between h-full">
-											<div className="flex flex-col gap-2 grow">
+										<div className="flex flex-col justify-between grow h-full">
+											<div className="flex flex-col gap-2 grow h-full">
 												<div className="flex flex-col gap-0.5">
 													<h2 className="font-semibold tracking-wide">
-														Uma Musume - Pretty Derby: Star Blossom
+														{/* Uma Musume - Pretty Derby: Star Blossom */}
+														{Object.values(manga.attributes.title)}
 													</h2>
 													<h3 className="text-[10px] italic">
-														ウマ娘　プリティーダービー　スターブロッサム
+														{/* ウマ娘　プリティーダービー　スターブロッサム */}
+														{
+															Object.values(
+																manga.attributes.altTitles
+																	.sort((a, b) => {
+																		const x = Object.keys(a)[0];
+																		const y = Object.keys(b)[0];
+																		return y.localeCompare(x);
+																	})
+																	.find((item) =>
+																		["en", "ja-ro", "ja"].includes(
+																			Object.keys(item)[0]
+																		)
+																	) || ""
+															)[0]
+														}
 													</h3>
-													<div className="flex gap-1 py-1">
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"destructive"}
-														>
-															Suggestive
-														</Badge>
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"default"}
-														>
-															Action
-														</Badge>
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"default"}
-														>
-															Romcom
-														</Badge>
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"default"}
-														>
-															Slice of Life
-														</Badge>
+
+													<div className="flex gap-1 py-1 flex-wrap">
+														{Object.values(manga.attributes.tags)
+															.filter(
+																(item) => item.attributes.group == "genre"
+															)
+															.map((tag) =>
+																// <div key={tag.id}>{tag.attributes.name.en}</div>
+																tag.attributes.name.en.toLowerCase() ==
+																"suggestive" ? (
+																	<Badge
+																		className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
+																		variant={"destructive"}
+																		key={tag.id}
+																	>
+																		{tag.attributes.name.en}
+																	</Badge>
+																) : (
+																	<Badge
+																		className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
+																		variant={"default"}
+																		key={tag.id}
+																	>
+																		{tag.attributes.name.en}
+																	</Badge>
+																)
+															)}
 													</div>
 												</div>
-												<div className="flex flex-col gap-2 grow">
-													<p className="text-[9px] font-light overflow-auto h-21">
-														{`The popular cross-media content "Uma Musume Pretty Derby"
-											features "Uma Musume" who have inherited the names and
-											souls of numerous racehorses! A new legend begins with the
-											indomitable horse girl "Sakura Laurel" as the main
-											character.`}
+												<div className="flex flex-col gap-2 grow overflow-y-scroll">
+													<p className="text-[9px] font-light">
+														{Object.values(manga.attributes.description)[0]}
 													</p>
 												</div>
-											</div>
 
-											{/* Author section */}
-											<div className="text-[9px] flex justify-between items-baseline border-t pt-1">
-												<span className="line-clamp-1">
-													Monjūsaki , Cygames, Hotani Shin
-												</span>
+												{/* Author section */}
+												<div className="text-[9px] flex justify-between items-baseline border-t pt-1">
+													<span className="line-clamp-1">
+														Monjūsaki , Cygames, Hotani Shin
+													</span>
 
-												<span className="text-[8px]">
-													<Clock4 size={10} className="inline" /> 1 hour ago
-												</span>
+													<span className="text-[8px]">
+														<Clock4 size={10} className="inline" /> 1 hour ago
+													</span>
+												</div>
 											</div>
 										</div>
 

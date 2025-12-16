@@ -229,8 +229,6 @@ class Fetcher():
           
           except Exception as e:
             raise Exception({"status": 500, "err" : e})
-      
-      print(result)
 
     except Exception as e:
       print(f"Error: {e}")
