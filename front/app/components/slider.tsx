@@ -40,6 +40,7 @@ type MangaSchema = {
 			type: string;
 			attributes: {
 				fileName: string;
+				name: string;
 			};
 		}
 	];
@@ -119,11 +120,11 @@ export function TopMangaSlider() {
 										<div className="flex flex-col justify-between grow h-full">
 											<div className="flex flex-col gap-2 grow h-full">
 												<div className="flex flex-col gap-0.5">
-													<h2 className="font-semibold tracking-wide">
+													<h2 className="font-semibold tracking-wide line-clamp-2">
 														{/* Uma Musume - Pretty Derby: Star Blossom */}
 														{Object.values(manga.attributes.title)}
 													</h2>
-													<h3 className="text-[10px] italic">
+													<h3 className="text-[10px] italic line-clamp-2">
 														{/* ウマ娘　プリティーダービー　スターブロッサム */}
 														{
 															Object.values(
@@ -177,13 +178,23 @@ export function TopMangaSlider() {
 												</div>
 
 												{/* Author section */}
-												<div className="text-[9px] flex justify-between items-baseline border-t pt-1">
+												<div className="text-[9px] flex justify-between border-t pt-1">
 													<span className="line-clamp-1">
-														Monjūsaki , Cygames, Hotani Shin
+														{/* Monjūsaki , Cygames, Hotani Shin */}
+														{[
+															...new Set(
+																manga.relationships
+																	.filter(
+																		(e) =>
+																			e.type === "author" || e.type === "artist"
+																	)
+																	.map((e) => e.attributes.name)
+															),
+														].join(", ")}
 													</span>
 
 													<span className="text-[8px]">
-														<Clock4 size={10} className="inline" /> 1 hour ago
+														{/* <Clock4 size={10} className="inline" /> 1 hour ago */}
 													</span>
 												</div>
 											</div>
