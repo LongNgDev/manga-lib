@@ -4,6 +4,7 @@ import NavbarSection from "@/app/components/sections/navbarSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Circle, Dot } from "lucide-react";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -16,6 +17,8 @@ type MangaSchema = {
 		altTitles: string[];
 		description: string;
 		latestUploadedChapter: string;
+		status: string;
+		year: string;
 		tags: [
 			{
 				id: string;
@@ -68,7 +71,7 @@ function Manga() {
 				<></>
 			) : (
 				<div className="relative w-full h-full overflow-visible pt-9">
-					<div className="fixed left-0 w-full h-full bg-accent/98 top-44 -z-10" />
+					<div className="fixed left-0 w-full h-full bg-accent/98 top-43 brightness-80 -z-10" />
 					<Image
 						src={`/api/cover?id=${manga.id}&file=${
 							manga.relationships.find((entry) => entry.type == "cover_art")
@@ -98,7 +101,7 @@ function Manga() {
 
 							{/* Manga Content */}
 							<div className="flex flex-col justify-between gap-2 grow">
-								<div className="flex flex-col justify-between gap-2 overflow-scroll max-h-30 grow">
+								<div className="flex flex-col justify-between gap-2 overflow-scroll h-28 grow">
 									<div className="flex flex-col gap-0.5">
 										<h2 className="text-xl font-bold tracking-wide">
 											{/* Uma Musume - Pretty Derby: Star Blossom */}
@@ -122,36 +125,10 @@ function Manga() {
 												)[0]
 											}
 										</h3>
-
-										{/* <div className="flex flex-wrap gap-1 py-1">
-											{Object.values(manga.attributes.tags)
-												.filter((item) => item.attributes.group == "genre")
-												.map((tag) =>
-													// <div key={tag.id}>{tag.attributes.name.en}</div>
-													tag.attributes.name.en.toLowerCase() ==
-													"suggestive" ? (
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"destructive"}
-															key={tag.id}
-														>
-															{tag.attributes.name.en}
-														</Badge>
-													) : (
-														<Badge
-															className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
-															variant={"default"}
-															key={tag.id}
-														>
-															{tag.attributes.name.en}
-														</Badge>
-													)
-												)}
-										</div> */}
 									</div>
 
 									{/* Author section */}
-									<div className="text-[9px] flex justify-between border-t pt-1">
+									<div className="text-[9px] flex justify-between border-t py-1">
 										<span className="line-clamp-1">
 											{/* Monjūsaki , Cygames, Hotani Shin */}
 											{[
@@ -167,13 +144,60 @@ function Manga() {
 									</div>
 								</div>
 
-								<div className="relative flex items-center">
+								<div className="relative flex flex-col justify-between gap-2">
 									<Button
-										className="h-fit font-bold px-2 py-1 text-[9px] capitalize rounded-xs w-fit"
-										variant={"destructive"}
+										className="h-fit font-bold bg-orange-500/85 px-2 py-1 text-[9px] capitalize rounded-xs w-fit"
+										variant={"secondary"}
 									>
 										Add to library
 									</Button>
+
+									<div className="flex flex-wrap gap-1">
+										{Object.values(manga.attributes.tags)
+											.filter((item) => item.attributes.group == "genre")
+											.map((tag) =>
+												tag.attributes.name.en.toLowerCase() == "suggestive" ? (
+													<Badge
+														className=" text-[5.5px] uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold"
+														variant={"destructive"}
+														key={tag.id}
+													>
+														{tag.attributes.name.en}
+													</Badge>
+												) : (
+													<Badge
+														className=" text-[5.5px] uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold shadow-md/60 shadow-accent-foreground/5"
+														variant={"secondary"}
+														key={tag.id}
+													>
+														{tag.attributes.name.en}
+													</Badge>
+												)
+											)}
+										<Badge
+											className=" text-[6px]  uppercase p-0 rounded-xs font-extrabold tracking-wide"
+											variant={"secondary"}
+											key={manga.id}
+										>
+											<span className="flex items-center gap-1 px-0.5">
+												<Circle
+													size={6}
+													className="text-green-500"
+													fill="green"
+												/>
+												Publication: {manga.attributes.year}
+											</span>
+										</Badge>
+										<Badge
+											className=" text-[6px]  uppercase p-0 rounded-xs font-extrabold tracking-wide"
+											variant={"secondary"}
+											key={manga.id}
+										>
+											<span className="flex items-center gap-1 px-0.5">
+												status: {manga.attributes.status}
+											</span>
+										</Badge>
+									</div>
 								</div>
 							</div>
 

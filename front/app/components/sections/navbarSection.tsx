@@ -13,7 +13,7 @@ function NavbarSection() {
 	useMotionValueEvent(scrollY, "change", (y) => setSolid(y > 0));
 
 	return (
-		<div className="fixed top-0 left-0 z-90 w-full h-10">
+		<div className="fixed top-0 left-0 w-full h-10 z-90">
 			<motion.nav
 				className={`fixed top-0 w-full transition-all duration-600 ease-out ${
 					solid ? "bg-accent/60 backdrop-blur-lg" : ""
