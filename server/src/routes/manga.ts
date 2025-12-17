@@ -35,7 +35,7 @@ router.get("/latest_updated", async (req: Request, res: Response) => {
 });
 
 // Get manga by id
-router.get("/manga/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
 	const uid = req.params.id;
 
 	try {
@@ -43,7 +43,7 @@ router.get("/manga/:id", async (req: Request, res: Response) => {
 
 		if (!data) throw Error(`Cannot find the manga with id ${uid}!`);
 
-		return data;
+		return res.status(200).json(data);
 	} catch (err) {
 		console.error("⚠️ Error fetching data:", err);
 		return res.status(500).json({ errors: err });

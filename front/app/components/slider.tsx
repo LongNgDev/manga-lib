@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 
 // Assets
 import Image from "next/image";
-import { Clock4 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type MangaSchema = {
@@ -73,7 +72,7 @@ export function TopMangaSlider() {
 				<></>
 			) : (
 				<>
-					<CarouselContent className="">
+					<CarouselContent>
 						{data.map((manga) => (
 							<CarouselItem key={manga.id} className="relative">
 								<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-10% from-accent via-85% via-accent/80 to-accent/65 -z-10 pointer-events-none"></div>

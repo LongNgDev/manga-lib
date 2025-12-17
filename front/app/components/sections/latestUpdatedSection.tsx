@@ -54,8 +54,6 @@ function LatestUpdatedSection() {
 			const data = await res.json();
 			setManga(data);
 			setLoading(false);
-
-			console.log(data[0].attributes.chapters);
 		};
 
 		fetchManga();
@@ -63,13 +61,12 @@ function LatestUpdatedSection() {
 
 	return (
 		<div className="flex flex-col w-full gap-2 p-2 bg-accent">
-			{/* Title */}
-
 			{/* Loading handle */}
 			{isLoading ? (
 				<></>
 			) : (
 				<>
+					{/* Title */}
 					<h2 className="font-semibold">Recent Updates</h2>
 					<div className="grid grid-cols-4 row-auto gap-2">
 						{/* Display items from manga list */}

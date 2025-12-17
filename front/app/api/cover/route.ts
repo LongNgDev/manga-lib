@@ -11,7 +11,11 @@ export async function GET(req: Request) {
 
 	const url = `https://uploads.mangadex.org/covers/${mangaId}/${file}`;
 
-	const res = await fetch(url);
+	const res = await fetch(url, {
+		next: {
+			revalidate: 86400,
+		},
+	});
 
 	if (!res.ok) {
 		return NextResponse.json(

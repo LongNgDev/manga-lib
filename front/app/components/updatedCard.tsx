@@ -7,6 +7,7 @@ import { Bookmark, MoveRight } from "lucide-react";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -52,8 +53,10 @@ function UpdatedCard({
 			{/* Blur backdrop */}
 			<div
 				className={[
-					"absolute z-10 w-full h-full transition-all duration-500 ease-in-out bg-accent/95 group-hover:opacity-100",
-					isToggle == data.id ? "opacity-100" : "opacity-0",
+					"absolute z-10 w-full h-full transition-all duration-600 ease-in-out bg-accent/95 group-hover:opacity-100",
+					isToggle == data.id
+						? "opacity-100 translate-x-0"
+						: "opacity-0 translate-x-full",
 				].join(" ")}
 			>
 				{/* Manga details */}
@@ -63,12 +66,12 @@ function UpdatedCard({
 							{/* Title */}
 							<h2 className="font-semibold tracking-wide h-fit text-[9px] line-clamp-2 ">
 								{/* Uma Musume - Pretty Derby: Star Blossom */}
-								{data.title}
+								<Link href={`/manga/${data.id}`}>{data.title}</Link>
 							</h2>
 							{/* Alternative Title */}
 							<h3 className="text-[7px] italic line-clamp-2 h-fit">
 								{/* ウマ娘　プリティーダービー　スターブロッサム */}
-								{data.altTitle}
+								<Link href={`/manga/${data.id}`}>{data.altTitle}</Link>
 							</h3>
 						</div>
 					</div>
