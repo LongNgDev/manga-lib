@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 // Assets
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type MangaSchema = {
 	id: string;
@@ -51,7 +52,7 @@ export function TopMangaSlider() {
 
 	useEffect(() => {
 		const fetchManga = async () => {
-			const res = await fetch("/api/manga/latest");
+			const res = await fetch("/api/manga/latest?limit=10");
 
 			if (!res.ok) return;
 
@@ -98,55 +99,61 @@ export function TopMangaSlider() {
 									{/* <CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
 								Popular New Titles
 								</CardHeader> */}
-									<CardContent className="flex items-center gap-2 px-2 grow h-full">
+									<CardContent className="flex items-center h-full gap-2 px-2 grow">
 										{/* Thumbnail Cover Image */}
-										<div className="relative h-full min-w-30 py-1">
-											<Image
-												src={`/api/cover?id=${manga.id}&file=${
-													manga.relationships.find(
-														(entry) => entry.type == "cover_art"
-													)?.attributes.fileName
-												}`}
-												// src={bgImg}
-												fill
-												alt="Thumbnail image"
-												loading="eager"
-												sizes="auto"
-												style={{
-													objectFit: "contain",
-													width: "100%",
-												}}
-											/>
+										<div className="relative h-full py-1 min-w-30">
+											<Link href={`/manga/${manga.id}`}>
+												<Image
+													src={`/api/cover?id=${manga.id}&file=${
+														manga.relationships.find(
+															(entry) => entry.type == "cover_art"
+														)?.attributes.fileName
+													}`}
+													// src={bgImg}
+													fill
+													alt="Thumbnail image"
+													loading="eager"
+													sizes="auto"
+													style={{
+														objectFit: "contain",
+														width: "100%",
+													}}
+												/>
+											</Link>
 										</div>
 
 										{/* Manga Content */}
-										<div className="flex flex-col justify-between grow h-full">
-											<div className="flex flex-col gap-2 grow h-full">
+										<div className="flex flex-col justify-between h-full grow">
+											<div className="flex flex-col h-full gap-2 grow">
 												<div className="flex flex-col gap-0.5">
-													<h2 className="font-semibold tracking-wide line-clamp-2">
-														{/* Uma Musume - Pretty Derby: Star Blossom */}
-														{Object.values(manga.attributes.title)}
-													</h2>
-													<h3 className="text-[10px] italic line-clamp-2">
-														{/* ウマ娘　プリティーダービー　スターブロッサム */}
-														{
-															Object.values(
-																manga.attributes.altTitles
-																	.sort((a, b) => {
-																		const x = Object.keys(a)[0];
-																		const y = Object.keys(b)[0];
-																		return y.localeCompare(x);
-																	})
-																	.find((item) =>
-																		["en", "ja-ro", "ja"].includes(
-																			Object.keys(item)[0]
-																		)
-																	) || ""
-															)[0]
-														}
-													</h3>
+													<Link href={`/manga/${manga.id}`}>
+														<h2 className="font-semibold tracking-wide line-clamp-2">
+															{/* Uma Musume - Pretty Derby: Star Blossom */}
+															{Object.values(manga.attributes.title)}
+														</h2>
+													</Link>
+													<Link href={`/manga/${manga.id}`}>
+														<h3 className="text-[10px] italic line-clamp-2">
+															{/* ウマ娘　プリティーダービー　スターブロッサム */}
+															{
+																Object.values(
+																	manga.attributes.altTitles
+																		.sort((a, b) => {
+																			const x = Object.keys(a)[0];
+																			const y = Object.keys(b)[0];
+																			return y.localeCompare(x);
+																		})
+																		.find((item) =>
+																			["en", "ja-ro", "ja"].includes(
+																				Object.keys(item)[0]
+																			)
+																		) || ""
+																)[0]
+															}
+														</h3>
+													</Link>
 
-													<div className="flex gap-1 py-1 flex-wrap">
+													<div className="flex flex-wrap gap-1 py-1">
 														{Object.values(manga.attributes.tags)
 															.filter(
 																(item) => item.attributes.group == "genre"
@@ -174,7 +181,7 @@ export function TopMangaSlider() {
 															)}
 													</div>
 												</div>
-												<div className="flex flex-col gap-2 grow overflow-y-scroll">
+												<div className="flex flex-col gap-2 overflow-y-scroll grow">
 													<p className="text-[9px] font-light">
 														{Object.values(manga.attributes.description)[0]}
 													</p>
@@ -196,9 +203,7 @@ export function TopMangaSlider() {
 														].join(", ")}
 													</span>
 
-													<span className="text-[8px]">
-														{/* <Clock4 size={10} className="inline" /> 1 hour ago */}
-													</span>
+													<span className="text-[8px]"></span>
 												</div>
 											</div>
 										</div>

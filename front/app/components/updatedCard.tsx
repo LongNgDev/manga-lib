@@ -103,7 +103,9 @@ function UpdatedCard({
 							className="px-1! py-0.5! rounded-sm h-fit gap-1"
 							size={"sm"}
 						>
-							<span className="text-[8px] font-semibold">View details</span>
+							<span className="text-[8px] font-semibold">
+								<Link href={`/manga/${data.id}`}>View details</Link>
+							</span>
 							<MoveRight className="size-2" />
 						</Button>
 					</div>

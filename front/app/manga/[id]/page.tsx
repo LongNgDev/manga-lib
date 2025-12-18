@@ -1,24 +1,45 @@
 "use client";
 
+import LatestUpdatedSection from "@/app/components/sections/latestUpdatedSection";
 import NavbarSection from "@/app/components/sections/navbarSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Circle, Dot } from "lucide-react";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+import { Circle } from "lucide-react";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+dayjs.extend(relativeTime);
+
+type ChapterData = {
+	attributes: {
+		updatedAt: string;
+		translatedLanguage: string;
+	};
+};
 
 type MangaSchema = {
 	id: string;
 	attributes: {
 		title: string;
 		altTitles: string[];
-		description: string;
+		description: Record<string, string>;
 		latestUploadedChapter: string;
 		status: string;
 		year: string;
+		chapters: {
+			chapter: string;
+			id: string;
+			data: ChapterData;
+			others: ChapterData[];
+		}[];
 		tags: [
 			{
 				id: string;
@@ -70,8 +91,8 @@ function Manga() {
 			{isLoading || !manga ? (
 				<></>
 			) : (
-				<div className="relative w-full h-full overflow-visible pt-9">
-					<div className="fixed left-0 w-full h-full bg-accent/98 top-43 brightness-80 -z-10" />
+				<div className="relative w-full h-full overflow-hidden pt-9 pb-2">
+					<div className="absolute left-0 w-full h-full bg-accent top-43 brightness-75 -z-10" />
 					<Image
 						src={`/api/cover?id=${manga.id}&file=${
 							manga.relationships.find((entry) => entry.type == "cover_art")
@@ -177,7 +198,7 @@ function Manga() {
 										<Badge
 											className=" text-[6px]  uppercase p-0 rounded-xs font-extrabold tracking-wide"
 											variant={"secondary"}
-											key={manga.id}
+											key={manga.attributes.year}
 										>
 											<span className="flex items-center gap-1 px-0.5">
 												<Circle
@@ -191,7 +212,7 @@ function Manga() {
 										<Badge
 											className=" text-[6px]  uppercase p-0 rounded-xs font-extrabold tracking-wide"
 											variant={"secondary"}
-											key={manga.id}
+											key={manga.attributes.status}
 										>
 											<span className="flex items-center gap-1 px-0.5">
 												status: {manga.attributes.status}
@@ -200,10 +221,50 @@ function Manga() {
 									</div>
 								</div>
 							</div>
-
-							{/* Top & Nav */}
 						</CardContent>
 					</Card>
+
+					<div className="px-2 text-[8px] flex flex-col gap-4">
+						<div>
+							<h3 className="text-sm font-semibold">Description</h3>
+							<p className="indent-2 max-h-21 h-fit overflow-auto">
+								{manga.attributes.description.en}
+							</p>
+						</div>
+
+						<div>
+							<h3 className="text-sm font-semibold">Chapters</h3>
+							<div className=" overflow-auto h-40 p-2">
+								<Table className="text-[8px]">
+									<TableBody>
+										{manga.attributes.chapters
+											.filter((chapter) => {
+												if (
+													["en"].includes(
+														chapter.data.attributes.translatedLanguage
+													)
+												)
+													return chapter;
+
+												return chapter.others.find((entry) =>
+													["en"].includes(entry.attributes.translatedLanguage)
+												);
+											})
+											.map((chapter) => (
+												<TableRow key={chapter.id}>
+													<TableCell>Chapter {chapter.chapter}</TableCell>
+													<TableCell className="text-right">
+														{dayjs(chapter.data.attributes.updatedAt).fromNow()}
+													</TableCell>
+												</TableRow>
+											))}
+									</TableBody>
+								</Table>
+							</div>
+						</div>
+
+						<LatestUpdatedSection />
+					</div>
 				</div>
 			)}
 		</main>
