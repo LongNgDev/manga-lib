@@ -1,8 +1,17 @@
 import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import { client } from "../database/client.js";
+import { createClient } from "redis";
+import { env } from "../config/env.js";
 
 const router: Router = Router();
+
+const redis = createClient({
+	url: env.redis,
+});
+redis.on("error", (err) => console.log("Redis Client Error", err));
+
+await redis.connect();
 
 const db = client.db("manga-lib");
 const col = db.collection("raw_metadata");
@@ -16,14 +25,20 @@ router.get("/health", (_req: Request, res: Response) => {
 router.get("/latest_updated", async (req: Request, res: Response) => {
 	const LIMIT: number = Number(req.query.limit) || 10;
 	const OFFSET: number = Number(req.query.offset) || 0;
+	const key = `latest:${LIMIT}:${OFFSET}`;
 
 	try {
+		const cached = await redis.get(key);
+		if (cached) return res.json(JSON.parse(cached));
+
 		const data = await col
 			.find({})
 			.sort({ "attributes.latestUploadedChapterTimeStamp": -1 })
 			.limit(LIMIT)
 			.skip(OFFSET)
 			.toArray();
+
+		await redis.set(key, JSON.stringify(data), { EX: 300 });
 
 		if (!data) throw Error("Missing data!");
 

@@ -15,4 +15,5 @@ const get = (key: string, fallback?: string) => {
 export const env = {
 	port: Number(get("PORT", "3000")),
 	mongodb: get("MONGO_URI", "mongodb://localhost:27017/"),
+	redis: get("REDIS_URL", "redis://localhost:6379"),
 };
