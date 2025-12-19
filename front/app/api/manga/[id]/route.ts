@@ -10,11 +10,7 @@ export async function GET(
 
 	const url = `https://manga.code-coffee.com/api/manga/${id}`;
 
-	const res = await fetch(url, {
-		next: {
-			revalidate: 300,
-		},
-	});
+	const res = await fetch(url);
 
 	if (!res.ok) {
 		return NextResponse.json(

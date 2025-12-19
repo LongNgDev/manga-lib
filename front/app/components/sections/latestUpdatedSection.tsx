@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import UpdatedCard from "../updatedCard";
+import { Button } from "@/components/ui/button";
 
 type ChapterData = {
 	attributes: {
@@ -36,6 +37,8 @@ type MangaSchema = {
 function LatestUpdatedSection() {
 	const [manga, setManga] = useState<Array<MangaSchema>>([]);
 	const [isLoading, setLoading] = useState(true);
+	const [offset, setOffset] = useState(0);
+	const limit = useRef(20);
 
 	const [isToggle, setToggle] = useState<string>();
 
@@ -44,20 +47,30 @@ function LatestUpdatedSection() {
 		setToggle(id);
 	};
 
+	const loadMore = () => {
+		setOffset((prev) => prev + limit.current);
+	};
+
 	// Fetch manga
 	useEffect(() => {
 		const fetchManga = async () => {
-			const res = await fetch("/api/manga/latest");
+			const res = await fetch(
+				`/api/manga/latest?limit=${limit.current}&offset=${offset}`
+			);
 
 			if (!res.ok) return;
 
 			const data = await res.json();
-			setManga(data);
+			setManga((prev) => {
+				const seen = new Set(prev.map((m) => m.id));
+				const filtered = data.filter((m: MangaSchema) => !seen.has(m.id));
+				return [...prev, ...filtered];
+			});
 			setLoading(false);
 		};
 
 		fetchManga();
-	}, []);
+	}, [offset]);
 
 	return (
 		<div className="flex flex-col w-full gap-2 p-2 bg-accent">
@@ -68,6 +81,7 @@ function LatestUpdatedSection() {
 				<>
 					{/* Title */}
 					<h2 className="font-semibold">Recent Updates</h2>
+					<div>{manga.length}</div>
 					<div className="grid grid-cols-4 row-auto gap-2">
 						{/* Display items from manga list */}
 						{manga.map((item: MangaSchema) => (
@@ -110,6 +124,18 @@ function LatestUpdatedSection() {
 								/>
 							</div>
 						))}
+					</div>
+					<div className="flex justify-center">
+						<Button
+							className="px-1.5 text-[9px] tracking-wider uppercase h-fit py-0.5 rounded-xs"
+							onClick={(e) => {
+								e.preventDefault();
+								loadMore();
+							}}
+							variant={"destructive"}
+						>
+							More
+						</Button>
 					</div>
 				</>
 			)}

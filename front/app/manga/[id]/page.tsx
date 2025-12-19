@@ -13,6 +13,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Circle } from "lucide-react";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -20,6 +21,7 @@ dayjs.extend(relativeTime);
 
 type ChapterData = {
 	attributes: {
+		title: string;
 		updatedAt: string;
 		translatedLanguage: string;
 	};
@@ -170,7 +172,13 @@ function Manga() {
 										className="h-fit font-bold bg-orange-500/85 px-2 py-1 text-[9px] capitalize rounded-xs w-fit"
 										variant={"secondary"}
 									>
-										Add to library
+										{/* Add to library */}
+										<Link
+											href={`https://mangadex.org/title/${manga.id}`}
+											target="_blank"
+										>
+											Read More
+										</Link>
 									</Button>
 
 									<div className="flex flex-wrap gap-1">
@@ -253,6 +261,7 @@ function Manga() {
 											.map((chapter) => (
 												<TableRow key={chapter.id}>
 													<TableCell>Chapter {chapter.chapter}</TableCell>
+													{/* <TableCell>{chapter.data.attributes.title}</TableCell> */}
 													<TableCell className="text-right">
 														{dayjs(chapter.data.attributes.updatedAt).fromNow()}
 													</TableCell>

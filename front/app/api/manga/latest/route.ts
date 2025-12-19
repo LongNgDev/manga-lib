@@ -2,14 +2,11 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
 	const { searchParams } = new URL(req.url);
-	const limit = searchParams.get("limit") ?? "20";
+	const limit = searchParams.get("limit") ?? "40";
+	const offset = searchParams.get("offset") ?? "0";
 
-	const url = `https://manga.code-coffee.com/api/manga/latest_updated?limit=${limit}`;
-	const res = await fetch(url, {
-		next: {
-			revalidate: 300,
-		},
-	});
+	const url = `https://manga.code-coffee.com/api/manga/latest_updated?limit=${limit}&offset=${offset}`;
+	const res = await fetch(url);
 
 	if (!res.ok) {
 		return NextResponse.json(

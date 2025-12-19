@@ -52,11 +52,17 @@ router.get("/latest_updated", async (req: Request, res: Response) => {
 // Get manga by id
 router.get("/:id", async (req: Request, res: Response) => {
 	const uid = req.params.id;
+	const key = uid as string;
 
 	try {
+		const cached = await redis.get(key);
+		if (cached) return res.json(JSON.parse(cached));
+
 		const data = await col.findOne({ id: uid });
 
 		if (!data) throw Error(`Cannot find the manga with id ${uid}!`);
+
+		await redis.set(key, JSON.stringify(data), { EX: 300 });
 
 		return res.status(200).json(data);
 	} catch (err) {
