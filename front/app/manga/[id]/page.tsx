@@ -93,8 +93,8 @@ function Manga() {
 			{isLoading || !manga ? (
 				<></>
 			) : (
-				<div className="relative w-full h-full overflow-hidden pt-9 pb-2">
-					<div className="absolute left-0 w-full h-full bg-accent top-43 brightness-75 -z-10" />
+				<div className="relative w-full h-full overflow-hidden pt-9 md:pt-10 pb-2">
+					<div className="absolute left-0 w-full h-full bg-accent top-43 md:top-43.5 brightness-75 -z-10" />
 					<Image
 						src={`/api/cover?id=${manga.id}&file=${
 							manga.relationships.find((entry) => entry.type == "cover_art")
@@ -126,11 +126,11 @@ function Manga() {
 							<div className="flex flex-col justify-between gap-2 grow">
 								<div className="flex flex-col justify-between gap-2 overflow-scroll h-28 grow">
 									<div className="flex flex-col gap-0.5">
-										<h2 className="text-xl font-bold tracking-wide">
+										<h2 className="text-xl md:text-2xl font-bold tracking-wide">
 											{/* Uma Musume - Pretty Derby: Star Blossom */}
 											{Object.values(manga.attributes.title)}
 										</h2>
-										<h3 className="text-xs italic line-clamp-2">
+										<h3 className="text-xs md:text-base italic line-clamp-2">
 											{/* ウマ娘　プリティーダービー　スターブロッサム */}
 											{
 												Object.values(
@@ -151,7 +151,7 @@ function Manga() {
 									</div>
 
 									{/* Author section */}
-									<div className="text-[9px] flex justify-between border-t py-1">
+									<div className="text-[9px] md:text-[10px] flex justify-between border-t py-1">
 										<span className="line-clamp-1">
 											{/* Monjūsaki , Cygames, Hotani Shin */}
 											{[
@@ -187,7 +187,7 @@ function Manga() {
 											.map((tag) =>
 												tag.attributes.name.en.toLowerCase() == "suggestive" ? (
 													<Badge
-														className=" text-[5.5px] uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold"
+														className=" text-[5.5px] md:text-[6.5px] md:font-bold uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold"
 														variant={"destructive"}
 														key={tag.id}
 													>
@@ -195,7 +195,7 @@ function Manga() {
 													</Badge>
 												) : (
 													<Badge
-														className=" text-[5.5px] uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold shadow-md/60 shadow-accent-foreground/5"
+														className=" text-[5.5px] md:text-[6.5px] md:font-bold uppercase px-0.5 py-0 tracking-wide rounded-xs font-extrabold shadow-md/60 shadow-accent-foreground/5"
 														variant={"secondary"}
 														key={tag.id}
 													>
@@ -232,7 +232,7 @@ function Manga() {
 						</CardContent>
 					</Card>
 
-					<div className="px-2 text-[8px] flex flex-col gap-4">
+					<div className="px-2 text-[8px] md:text-[9px] flex flex-col gap-4">
 						<div>
 							<h3 className="text-sm font-semibold">Description</h3>
 							<p className="indent-2 max-h-21 h-fit overflow-auto">
@@ -243,7 +243,7 @@ function Manga() {
 						<div>
 							<h3 className="text-sm font-semibold">Chapters</h3>
 							<div className=" overflow-auto h-40 p-2">
-								<Table className="text-[8px]">
+								<Table className="text-[8px] md:text-[9px]">
 									<TableBody>
 										{manga.attributes.chapters
 											.filter((chapter) => {

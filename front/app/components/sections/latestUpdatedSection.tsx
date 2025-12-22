@@ -80,9 +80,9 @@ function LatestUpdatedSection() {
 			) : (
 				<>
 					{/* Title */}
-					<h2 className="font-semibold">Recent Updates</h2>
-					<div>{manga.length}</div>
-					<div className="grid grid-cols-4 row-auto gap-2">
+					<h2 className="font-semibold md:text-lg">Recent Updates</h2>
+
+					<div className="grid grid-cols-4 md:grid-cols-5 row-auto gap-2">
 						{/* Display items from manga list */}
 						{manga.map((item: MangaSchema) => (
 							<div key={item.id}>

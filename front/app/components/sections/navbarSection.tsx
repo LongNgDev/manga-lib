@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { useMotionValueEvent, useScroll, motion } from "motion/react";
 import Link from "next/link";
 
@@ -25,7 +23,7 @@ function NavbarSection() {
 				<div className="flex items-center justify-between h-full p-2">
 					<div className="flex gap-1">
 						{/* <div>Logo</div> */}
-						<h1>
+						<h1 className="md:text-2xl md:font-semibold">
 							<Link href={"/"}>MangaLib</Link>
 						</h1>
 					</div>

@@ -9,12 +9,12 @@ export default function Home() {
 			{/* Navbar Section */}
 			<NavbarSection />
 			{/* Top 10 Section */}
-			<div className="w-full md:h-[500px]">
+			<div className="w-full">
 				{/* Main Container */}
 				<div className="relative h-full grow">
 					{/* Content Container */}
 					<div className="relative flex items-center justify-center w-full h-full">
-						<h2 className="absolute left-1.5 top-10 z-20 text-xs font-semibold tracking-wide">
+						<h2 className="absolute left-1.5 top-14 z-20 text-xs md:text-lg font-semibold tracking-wide">
 							Popular New Titles
 						</h2>
 

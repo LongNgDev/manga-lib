@@ -76,7 +76,7 @@ export function TopMangaSlider() {
 					<CarouselContent>
 						{data.map((manga) => (
 							<CarouselItem key={manga.id} className="relative">
-								<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-10% from-accent via-85% via-accent/80 to-accent/65 -z-10 pointer-events-none"></div>
+								<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-10% from-accent via-85% via-accent/80 to-accent/65 -z-10 pointer-events-none" />
 								<Image
 									src={`/api/cover?id=${manga.id}&file=${
 										manga.relationships.find(
@@ -95,13 +95,10 @@ export function TopMangaSlider() {
 									className="absolute top-0 left-0 w-full h-full -z-20"
 								/>
 
-								<Card className="h-64 gap-0 border-0 shadow-none bg-accent/0 outline-0 pt-18">
-									{/* <CardHeader className="px-2 py-0 text-base font-semibold tracking-wide ">
-								Popular New Titles
-								</CardHeader> */}
+								<Card className="h-64 md:h-74 gap-0 border-0 shadow-none bg-accent/0 outline-0 pt-18 md:pt-22">
 									<CardContent className="flex items-center h-full gap-2 px-2 grow">
 										{/* Thumbnail Cover Image */}
-										<div className="relative h-full py-1 min-w-30">
+										<div className="relative h-full py-1 min-w-30 md:min-w-34">
 											<Link href={`/manga/${manga.id}`}>
 												<Image
 													src={`/api/cover?id=${manga.id}&file=${
@@ -127,13 +124,13 @@ export function TopMangaSlider() {
 											<div className="flex flex-col h-full gap-2 grow">
 												<div className="flex flex-col gap-0.5">
 													<Link href={`/manga/${manga.id}`}>
-														<h2 className="font-semibold tracking-wide line-clamp-2">
+														<h2 className="font-semibold tracking-wide line-clamp-2 md:text-xl md:font-bold">
 															{/* Uma Musume - Pretty Derby: Star Blossom */}
 															{Object.values(manga.attributes.title)}
 														</h2>
 													</Link>
 													<Link href={`/manga/${manga.id}`}>
-														<h3 className="text-[10px] italic line-clamp-2">
+														<h3 className="text-[10px] italic line-clamp-2 md:text-sm tracking-wide">
 															{/* ウマ娘　プリティーダービー　スターブロッサム */}
 															{
 																Object.values(
@@ -163,7 +160,7 @@ export function TopMangaSlider() {
 																tag.attributes.name.en.toLowerCase() ==
 																"suggestive" ? (
 																	<Badge
-																		className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
+																		className=" text-[6px] md:text-[7px] uppercase tracking-wider py-0 px-1 font-extrabold"
 																		variant={"destructive"}
 																		key={tag.id}
 																	>
@@ -171,7 +168,7 @@ export function TopMangaSlider() {
 																	</Badge>
 																) : (
 																	<Badge
-																		className=" text-[6px] uppercase tracking-wider py-0 px-1 font-extrabold"
+																		className=" text-[6px] md:text-[7px] uppercase tracking-wider py-0 px-1 font-extrabold"
 																		variant={"default"}
 																		key={tag.id}
 																	>
@@ -182,13 +179,13 @@ export function TopMangaSlider() {
 													</div>
 												</div>
 												<div className="flex flex-col gap-2 overflow-y-scroll grow">
-													<p className="text-[9px] font-light">
+													<p className="text-[9px] font-light md:text-[10px]">
 														{Object.values(manga.attributes.description)[0]}
 													</p>
 												</div>
 
 												{/* Author section */}
-												<div className="text-[9px] flex justify-between border-t pt-1">
+												<div className="text-[9px] md:text-[10px] flex justify-between border-t pt-1 ">
 													<span className="line-clamp-1">
 														{/* Monjūsaki , Cygames, Hotani Shin */}
 														{[
