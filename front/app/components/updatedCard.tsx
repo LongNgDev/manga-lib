@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { Bookmark, MoveRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -40,7 +40,7 @@ function UpdatedCard({
 }) {
 	return (
 		<div
-			className="relative w-full overflow-hidden select-none h-34 md:h-52 group"
+			className="relative w-full overflow-hidden select-none h-34 md:h-52 lg:h-80 group"
 			onClick={(e) => {
 				// Only toggle on mobile / touch devices
 				if (window.matchMedia("(hover: none)").matches) {
@@ -53,10 +53,10 @@ function UpdatedCard({
 			{/* Blur backdrop */}
 			<div
 				className={[
-					"absolute z-10 w-full h-full transition-all duration-600 ease-in-out bg-accent/95 group-hover:opacity-100",
+					"absolute z-10 w-full h-full transition-all duration-750 ease-in-out bg-accent/95 group-hover:opacity-100 group-hover:translate-x-0",
 					isToggle == data.id
 						? "opacity-100 translate-x-0"
-						: "opacity-0 translate-x-full",
+						: "translate-x-full",
 				].join(" ")}
 			>
 				{/* Manga details */}
@@ -64,12 +64,12 @@ function UpdatedCard({
 					<div className="grid row-span-2">
 						<div className="flex flex-col gap-1">
 							{/* Title */}
-							<h2 className="font-semibold tracking-wide h-fit text-[9px] md:text-sm  line-clamp-2 ">
+							<h2 className="font-semibold tracking-wide h-fit text-[9px] md:text-sm lg:text-xl lg:font-bold line-clamp-2 ">
 								{/* Uma Musume - Pretty Derby: Star Blossom */}
 								<Link href={`/manga/${data.id}`}>{data.title}</Link>
 							</h2>
 							{/* Alternative Title */}
-							<h3 className="text-[7px] md:text-[9px] italic line-clamp-2 h-fit">
+							<h3 className="text-[7px] md:text-[9px] lg:text-sm italic line-clamp-2 h-fit">
 								{/* ウマ娘　プリティーダービー　スターブロッサム */}
 								<Link href={`/manga/${data.id}`}>{data.altTitle}</Link>
 							</h3>
@@ -77,7 +77,7 @@ function UpdatedCard({
 					</div>
 					{/* Chapter List */}
 					<div className="row-span-2">
-						<div className="grid row-auto h-full text-[7px] md:text-[9px] py-1 font-light">
+						<div className="grid row-auto h-full text-[7px] md:text-[9px] lg:text-base py-1 font-light">
 							{/* {Array.from({ length: 3 }).map((_, index) => ( */}
 							{data.chapters.slice(0, 3).map((chapter) => (
 								<div
@@ -86,7 +86,7 @@ function UpdatedCard({
 								>
 									<h3>Chapter {chapter.chapter}</h3>
 									<div className="self-end my-0.5 border-b border-dotted grow border-accent-foreground"></div>
-									<span className="md:text-[8px] text-[7px]">
+									<span className="md:text-[8px] lg:text-sm text-[7px]">
 										{dayjs(chapter.data.attributes.updatedAt).fromNow()}
 									</span>
 								</div>
@@ -100,13 +100,13 @@ function UpdatedCard({
 
 						<Button
 							variant={"default"}
-							className="px-1! py-0.5! md:py-1! md:px-1.5! rounded-sm h-fit gap-1"
+							className="px-1! py-0.5! md:py-1! md:px-1.5! lg:py-3! lg:px-5! rounded-sm h-fit gap-1"
 							size={"sm"}
 						>
-							<span className="text-[8px] md:text-[10px] md:font-bold font-semibold">
+							<span className="text-[8px] md:text-[10px] md:font-bold lg:text-base uppercase font-bold">
 								<Link href={`/manga/${data.id}`}>View details</Link>
 							</span>
-							<MoveRight className="size-2 md:size-3" />
+							<MoveRight className="size-2 md:size-3 lg:size-5" />
 						</Button>
 					</div>
 				</div>

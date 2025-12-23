@@ -12,7 +12,7 @@ function NavbarSection() {
 	useMotionValueEvent(scrollY, "change", (y) => setSolid(y > 0));
 
 	return (
-		<div className="fixed top-0 left-0 w-full h-10 z-90">
+		<div className="fixed top-0 left-0 w-full z-90">
 			<motion.nav
 				className={`fixed top-0 w-full transition-all duration-600 ease-out border-none ${
 					solid
@@ -20,10 +20,10 @@ function NavbarSection() {
 						: "bg-accent/40 backdrop-blur-sm"
 				}`}
 			>
-				<div className="flex items-center justify-between h-full p-2">
+				<div className="flex items-center justify-between h-full p-2 m-auto lg:py-4 max-w-7xl">
 					<div className="flex gap-1">
 						{/* <div>Logo</div> */}
-						<h1 className="md:text-2xl md:font-semibold">
+						<h1 className="md:text-2xl md:font-semibold lg:text-5xl">
 							<Link href={"/"}>MangaLib</Link>
 						</h1>
 					</div>
