@@ -25,7 +25,7 @@ Built with **Next.js**, **TypeScript**, **MongoDB**, **Redis**, and **Docker**, 
 ## 🚀 Deployment
 
 This project is deployed on my own server using **Docker Compose**, with **Redis** for caching and **Nginx** as a reverse proxy.  
-Visit the website at **[Manga Library]((https://vercel.com/long-nguyens-projects-4cd06ab3/manga-lib))** 📖✨
+Visit the website at **[Manga Library](https://vercel.com/long-nguyens-projects-4cd06ab3/manga-lib)** 📖✨
 
 ## 🧠 Lessons Learned
 
@@ -53,5 +53,6 @@ A passionate software engineer who loves coding, coffee, and building cozy, usef
 
 - 🌐 [LinkedIn](https://www.linkedin.com/in/longngdev/)
 - 💌 [Email](mailto:longng.dev@gmail.com)
+
 
 
