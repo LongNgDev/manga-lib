@@ -101,6 +101,7 @@ class Fetcher():
           "limit": self.__limit,
           "offset": self.__offset,
           "excludedTags[]": self.__exclude_tags,
+          "contentRating[]" : ["safe", "suggestive"],
           "includes[]": self.__expansion_opts,
           "availableTranslatedLanguage[]": ["en", "vi"],
           "order[latestUploadedChapter]":"desc",
