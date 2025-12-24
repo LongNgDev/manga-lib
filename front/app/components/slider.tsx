@@ -77,7 +77,7 @@ export function TopMangaSlider() {
 						{data.map((manga) => (
 							<CarouselItem
 								key={manga.id}
-								className="relative flex flex-col gap-1 md:pt-22 pt-18"
+								className="relative flex flex-col w-full gap-1 md:pt-22 pt-18"
 							>
 								<div className="absolute top-0 left-0 w-full h-full bg-linear-to-t from-10% from-accent via-85% via-accent/80 to-accent/65 -z-10 pointer-events-none" />
 								<Image
@@ -86,7 +86,6 @@ export function TopMangaSlider() {
 											(entry) => entry.type == "cover_art"
 										)?.attributes.fileName
 									}`}
-									// src={bgImg}
 									fill
 									sizes="auto"
 									loading="eager"
@@ -95,12 +94,13 @@ export function TopMangaSlider() {
 										objectFit: "cover",
 										width: "100%",
 									}}
+									priority
 									className="absolute top-0 left-0 w-full h-full -z-20"
 								/>
 								<Card className="h-64 gap-0 border-0 shadow-none md:h-74 lg:h-112 bg-accent/0 outline-0 ">
 									<CardContent className="flex items-center h-full gap-2 px-2 grow">
 										{/* Thumbnail Cover Image */}
-										<div className="relative h-full py-1 min-w-30 md:min-w-34 lg:min-w-70">
+										<div className="relative  h-full py-1 min-w-30 md:min-w-34 lg:min-w-70">
 											<Link href={`/manga/${manga.id}`}>
 												<Image
 													src={`/api/cover?id=${manga.id}&file=${
@@ -108,7 +108,6 @@ export function TopMangaSlider() {
 															(entry) => entry.type == "cover_art"
 														)?.attributes.fileName
 													}`}
-													// src={bgImg}
 													fill
 													alt="Thumbnail image"
 													loading="eager"
@@ -117,6 +116,7 @@ export function TopMangaSlider() {
 														objectFit: "contain",
 														width: "100%",
 													}}
+													priority
 												/>
 											</Link>
 										</div>

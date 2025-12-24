@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import UpdatedCard from "../updatedCard";
 import { Button } from "@/components/ui/button";
+import { useInView } from "motion/react";
+import { Spinner } from "@/components/ui/spinner";
 
 type ChapterData = {
 	attributes: {
@@ -40,6 +42,9 @@ function LatestUpdatedSection() {
 	const [offset, setOffset] = useState(0);
 	const limit = useRef(20);
 
+	const ref = useRef<HTMLDivElement | null>(null);
+	const isInView = useInView(ref, { margin: "0px 0px 50px 0px" });
+
 	const [isToggle, setToggle] = useState<string>();
 
 	const infoToggle = (id: string) => {
@@ -71,6 +76,14 @@ function LatestUpdatedSection() {
 
 		fetchManga();
 	}, [offset]);
+
+	// Auto load more when reach the end
+	useEffect(() => {
+		if (isLoading) return;
+		if (!isInView) return;
+
+		loadMore();
+	}, [isInView, isLoading]);
 
 	return (
 		<div className="flex flex-col w-full gap-2 p-2 bg-accent">
@@ -127,7 +140,15 @@ function LatestUpdatedSection() {
 							</div>
 						))}
 					</div>
-					<div className="flex justify-center" id="last-title">
+
+					<div
+						className={`flex justify-center  py-10 w-full z-10 ${
+							isLoading && "hidden"
+						} `}
+					>
+						<Spinner className="size-10" />
+					</div>
+					{/* <div className="flex justify-center">
 						<Button
 							className="px-1.5 text-[9px] tracking-wider uppercase h-fit py-0.5 rounded-xs"
 							onClick={(e) => {
@@ -138,9 +159,10 @@ function LatestUpdatedSection() {
 						>
 							More
 						</Button>
-					</div>
+					</div> */}
 				</>
 			)}
+			<div ref={ref} />
 		</div>
 	);
 }
