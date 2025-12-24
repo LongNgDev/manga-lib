@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+import Autoplay from "embla-carousel-autoplay";
 import {
 	Carousel,
 	CarouselContent,
@@ -66,8 +67,9 @@ export function TopMangaSlider() {
 
 	return (
 		<Carousel
-			className="flex items-center w-full "
+			className="flex items-center w-full"
 			opts={{ align: "start", loop: true }}
+			plugins={[Autoplay({ delay: 6000 })]}
 		>
 			{isLoading ? (
 				<></>

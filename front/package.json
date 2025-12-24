@@ -9,12 +9,13 @@
 		"lint": "eslint"
 	},
 	"dependencies": {
+		"@lottiefiles/dotlottie-react": "^0.17.7",
 		"@radix-ui/react-avatar": "^1.1.11",
 		"@radix-ui/react-slot": "^1.2.4",
 		"class-variance-authority": "^0.7.1",
-		"@lottiefiles/dotlottie-react": "^0.17.7",
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.19",
+		"embla-carousel-autoplay": "^8.6.0",
 		"embla-carousel-react": "^8.6.0",
 		"lucide-react": "^0.555.0",
 		"motion": "^12.23.26",
