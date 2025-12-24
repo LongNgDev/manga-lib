@@ -1,14 +1,16 @@
 "use server";
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET({ params }: { params: { id: string } }) {
+export async function GET(
+	_req: NextRequest,
+	{ params }: { params: { id: string } }
+) {
 	const { id } = await params;
-	if (!id)
-		return NextResponse.json(
-			{ error: "Failed to fetch manga!" },
-			{ status: 500 }
-		);
+
+	if (!id) {
+		return NextResponse.json({ error: "Missing id" }, { status: 400 });
+	}
 
 	const url = `https://manga.code-coffee.com/api/manga/${id}`;
 
